@@ -6,46 +6,58 @@ class keypad(tk.Frame):
         super().__init__(master, **kwargs)
         self.master = master
 
-        self.output_screen = ttk.Entry(self, state='readonly')
-        self.output_screen.grid(row=0, column=0, columnspan=3, padx=5, pady=5, sticky='ew')
+        self.accessGranted = False
         
         self.create_keypad()
+        self.updateOutput("Enter pin: ")
+
+    def updateOutput(self, text):
+        self.outputWindow.insert(0.0, text)
+    
 
     def create_keypad(self):
+                            
         style = ttk.Style()
         style.configure('keypad.TButton', padding=10, relief="raised")
+        
+        self.outputWindow = tk.Text(self, bg='black', fg='white', height=12, width=50, relief="raised")
+        self.outputWindow.grid(row=0, column=0, rowspan=4)
 
         pad = [
-            '1', '2', '3',
-            '4', '5', '6',
-            '7', '8', '9',
-            'Yes', '0', 'No'
+            '1', '2', '3', '^',
+            '4', '5', '6', 'Ent',
+            '7', '8', '9', 'v',
+            'Yes', '0', 'No', ' '
             ]
 
-        row, col = 1, 0
+        row, col = 0, 10
         for button_text in pad:
             button = ttk.Button(self, text=button_text, style='keypad.TButton', command = lambda text=button_text: self.key_pressed(text))
             button.grid(row=row, column=col, padx=5, pady=5)
             col+=1
-            if col>2:
-                col=0
+            if col>13:
+                col=10
                 row+=1
+    
 
     def key_pressed(self, text):
-        current_text = self.output_screen.get()
         if text == "Yes":
-            self.output_screen.config(state='normal')
-            self.output_screen.delete(0, tk.END)
-            self.output_screen.config(state='readonly')
+            pass
         elif text == 'No':
-            self.output_screen.config(state='normal')
-            self.output_screen.delete(0, tk.END)
-            self.output_screen.config(state='readonly')
+            pass
+        elif text == 'Ent':
+            pass
+        elif text == ' ':
+            pass
+        elif text == '^':
+            pass
+        elif text == 'v':
+            pass
         else:
-            self.output_screen.config(state='normal')
-            self.output_screen.delete(0, tk.END)
-            self.output_screen.insert(0, current_text + text)
-            self.output_screen.config(state='readonly')
+            if(self.accessGranted):
+                pass
+            else:
+                self.outputWindow.insert(tk.END, "*")
 
 if __name__ == "__main__":
     root = tk.Tk()
