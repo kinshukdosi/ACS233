@@ -6,8 +6,10 @@ class keypad(tk.Frame):
         super().__init__(master, **kwargs)
         self.master = master
 
-        self.accessGranted = False
-        self.text_output = []
+        self.access_granted = False
+        self.text_output = ['Enter pin:']
+        self.PASSKEY = ['1', '2', '3', '4']
+        self.entered_pin = []
 
         self.create_output_window()
         self.create_keypad()
@@ -36,15 +38,15 @@ class keypad(tk.Frame):
     
 
     def key_pressed(self, text):
-        
-        self.text_output.append(text)
-        self.update_output_window()
         if text == "Yes":
             pass
         elif text == 'No':
             pass
         elif text == 'Ent':
-            pass
+            if not(self.access_granted):
+                if self.entered_pin == self.PASSKEY:
+                    self.access_granted = True
+                    self.text_output = ['Level 1 accessed\n']
         elif text == ' ':
             pass
         elif text == '^':
@@ -52,10 +54,13 @@ class keypad(tk.Frame):
         elif text == 'v':
             pass
         else:
-            if(self.accessGranted):
+            if(self.access_granted):
                 pass
             else:
-                pass
+                self.text_output.append('*')
+                self.entered_pin.append(text)
+
+        self.update_output_window()
 
     def create_output_window(self):
         self.output_window = tk.Text(self, height=10, width = 50, bg='black', fg='white', relief = 'raised')
@@ -65,7 +70,6 @@ class keypad(tk.Frame):
         self.output_window.delete('1.0', tk.END)
         for line in self.text_output:
             self.output_window.insert(tk.END, line)
-            self.output_window.insert(tk.END, '\n')
 
 if __name__ == "__main__":
     root = tk.Tk()
