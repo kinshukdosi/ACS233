@@ -9,8 +9,10 @@ class keypad(tk.Frame):
         self.access_granted = False
         self.text_output = ['Enter pin:']
         self.PASSKEY = ['1', '2', '3', '4']
+        self.LEVEL_1_OPTIONS = ['Level 1 accessed\n', 'Switch between day/night\n']
+        self.LEVEL_2_OPTIONS = ['Add face\n', 'Delete face\n', 'Deactivate system\n', 'change pin (not entry pin)\n']
         self.entered_pin = []
-        self.cursor = 1.0
+        self.cursor = 2.0
 
         self.create_output_window()
         self.create_keypad()
@@ -23,9 +25,9 @@ class keypad(tk.Frame):
 
         pad = [
             '1', '2', '3', '^',
-            '4', '5', '6', ' ',
+            '4', '5', '6', 'Ent',
             '7', '8', '9', 'v',
-            'Ent', '0', 'Back', ' '
+            'Face', '0', ' ', 'Del'
             ]
 
         row, col = 0, 10
@@ -39,18 +41,19 @@ class keypad(tk.Frame):
     
 
     def key_pressed(self, text):
-        if text == "Yes":
+        if text == " ":
             pass
-        elif text == 'No':
-            pass
+        elif text == 'Face':
+            if(self.access_granted):
+                self.level_2_access()
         elif text == 'Ent':
             if not(self.access_granted):
                 if self.entered_pin == self.PASSKEY:
                     self.access_granted = True
-                    self.text_output = ['Level 1 accessed\n', 'switch between day/night\n']
+                    self.text_output = self.LEVEL_1_OPTIONS
             else:
                 print(f'User Selected: {self.text_output[int(self.cursor)-1]}')
-        elif text == 'Back':
+        elif text == 'Del':
             if not(self.access_granted):
                 if len(self.entered_pin) > 0:
                     self.entered_pin.pop()
@@ -59,7 +62,7 @@ class keypad(tk.Frame):
                 
             
         elif text == '^':
-            if(self.cursor > 1):
+            if(self.cursor > 2):
                 self.cursor -= 1.0
         elif text == 'v':
             if(self.cursor < len(self.text_output)):
@@ -85,6 +88,11 @@ class keypad(tk.Frame):
         if(self.access_granted):
             self.output_window.tag_add('highlightline', self.cursor, self.cursor+1.0)
             self.output_window.tag_config('highlightline', background = "white", foreground = 'black')
+
+    def level_2_access(self):
+        self.text_output = self.LEVEL_1_OPTIONS + self.LEVEL_2_OPTIONS
+        self.text_output[0] = 'level 2 accessed\n'
+        self.update_output_window()
             
 
 if __name__ == "__main__":
