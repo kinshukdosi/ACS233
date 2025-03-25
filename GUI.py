@@ -10,6 +10,7 @@ class keypad(tk.Frame):
         self.text_output = ['Enter pin:']
         self.PASSKEY = ['1', '2', '3', '4']
         self.entered_pin = []
+        self.cursor = 1.0
 
         self.create_output_window()
         self.create_keypad()
@@ -24,7 +25,7 @@ class keypad(tk.Frame):
             '1', '2', '3', '^',
             '4', '5', '6', 'Ent',
             '7', '8', '9', 'v',
-            'Yes', '0', 'No', ' '
+            'Yes', '0', 'No', 'Back'
             ]
 
         row, col = 0, 10
@@ -46,13 +47,20 @@ class keypad(tk.Frame):
             if not(self.access_granted):
                 if self.entered_pin == self.PASSKEY:
                     self.access_granted = True
-                    self.text_output = ['Level 1 accessed\n']
-        elif text == ' ':
-            pass
+                    self.text_output = ['Level 1 accessed\n', 'switch between day/night\n']
+        elif text == 'Back':
+            if len(self.entered_pin) > 0:
+                self.entered_pin.pop()
+                self.text_output.pop()
+                self.update_output_window()
+                
+            
         elif text == '^':
-            pass
+            if(self.cursor > 1):
+                self.cursor -= 1.0
         elif text == 'v':
-            pass
+            if(self.cursor < len(self.text_output)):
+                self.cursor += 1.0
         else:
             if(self.access_granted):
                 pass
@@ -70,6 +78,11 @@ class keypad(tk.Frame):
         self.output_window.delete('1.0', tk.END)
         for line in self.text_output:
             self.output_window.insert(tk.END, line)
+
+        if(self.access_granted):
+            self.output_window.tag_add('highlightline', self.cursor, self.cursor+1.0)
+            self.output_window.tag_config('highlightline', background = "white", foreground = 'black')
+            
 
 if __name__ == "__main__":
     root = tk.Tk()
