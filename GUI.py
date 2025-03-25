@@ -23,9 +23,9 @@ class keypad(tk.Frame):
 
         pad = [
             '1', '2', '3', '^',
-            '4', '5', '6', 'Ent',
+            '4', '5', '6', ' ',
             '7', '8', '9', 'v',
-            'Yes', '0', 'No', 'Back'
+            'Ent', '0', 'Back', ' '
             ]
 
         row, col = 0, 10
@@ -51,10 +51,11 @@ class keypad(tk.Frame):
             else:
                 print(f'User Selected: {self.text_output[int(self.cursor)-1]}')
         elif text == 'Back':
-            if len(self.entered_pin) > 0:
-                self.entered_pin.pop()
-                self.text_output.pop()
-                self.update_output_window()
+            if not(self.access_granted):
+                if len(self.entered_pin) > 0:
+                    self.entered_pin.pop()
+                    self.text_output.pop()
+                    self.update_output_window()
                 
             
         elif text == '^':
