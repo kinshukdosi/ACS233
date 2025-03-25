@@ -48,6 +48,8 @@ class keypad(tk.Frame):
                 if self.entered_pin == self.PASSKEY:
                     self.access_granted = True
                     self.text_output = ['Level 1 accessed\n', 'switch between day/night\n']
+            else:
+                print(f'User Selected: {self.text_output[int(self.cursor)-1]}')
         elif text == 'Back':
             if len(self.entered_pin) > 0:
                 self.entered_pin.pop()
