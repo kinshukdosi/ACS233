@@ -7,21 +7,16 @@ class keypad(tk.Frame):
         self.master = master
 
         self.accessGranted = False
-        
-        self.create_keypad()
-        self.updateOutput("Enter pin: ")
+        self.text_output = []
 
-    def updateOutput(self, text):
-        self.outputWindow.insert(0.0, text)
+        self.create_output_window()
+        self.create_keypad()
+        self.update_output_window()
     
 
     def create_keypad(self):
-                            
         style = ttk.Style()
         style.configure('keypad.TButton', padding=10, relief="raised")
-        
-        self.outputWindow = tk.Text(self, bg='black', fg='white', height=12, width=50, relief="raised")
-        self.outputWindow.grid(row=0, column=0, rowspan=4)
 
         pad = [
             '1', '2', '3', '^',
@@ -33,7 +28,7 @@ class keypad(tk.Frame):
         row, col = 0, 10
         for button_text in pad:
             button = ttk.Button(self, text=button_text, style='keypad.TButton', command = lambda text=button_text: self.key_pressed(text))
-            button.grid(row=row, column=col, padx=5, pady=5)
+            button.grid(row=row, column=col)
             col+=1
             if col>13:
                 col=10
@@ -41,6 +36,9 @@ class keypad(tk.Frame):
     
 
     def key_pressed(self, text):
+        
+        self.text_output.append(text)
+        self.update_output_window()
         if text == "Yes":
             pass
         elif text == 'No':
@@ -57,7 +55,17 @@ class keypad(tk.Frame):
             if(self.accessGranted):
                 pass
             else:
-                self.outputWindow.insert(tk.END, "*")
+                pass
+
+    def create_output_window(self):
+        self.output_window = tk.Text(self, height=10, width = 50, bg='black', fg='white', relief = 'raised')
+        self.output_window.grid(row = 0, column = 0, rowspan=4)
+
+    def update_output_window(self):
+        self.output_window.delete('1.0', tk.END)
+        for line in self.text_output:
+            self.output_window.insert(tk.END, line)
+            self.output_window.insert(tk.END, '\n')
 
 if __name__ == "__main__":
     root = tk.Tk()
