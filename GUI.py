@@ -1,6 +1,8 @@
 import tkinter as tk
 from tkinter import ttk
 
+from datetime import datetime
+
 
 #class object for keypad
 class keypad(tk.Frame):
@@ -98,14 +100,20 @@ class keypad(tk.Frame):
     #creates output window inside main window as a text box
     def create_output_window(self):
         self.output_window = tk.Text(self, height=10, width = 50, bg='black', fg='white', relief = 'raised')
-        self.output_window.grid(row = 0, column = 0, rowspan=4)
+        self.output_window.grid(row = 0, column =0, rowspan=4)
 
     #updates output window by clearing window then reprinting the text_output variable
     #also adds cursor when in menu
     def update_output_window(self):
+        current_time = datetime.now().time()
         self.output_window.delete('1.0', tk.END)
+        i = 0
         for line in self.text_output:
-            self.output_window.insert(tk.END, line)
+            if i == 0:
+                self.output_window.insert(tk.END, current_time.strftime('%H:%M') + ' ' + line)
+                i = 1
+            else: 
+                self.output_window.insert(tk.END, line)
 
         if(self.access_granted):
             self.output_window.tag_add('highlightline', self.cursor, self.cursor+1.0)
