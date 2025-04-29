@@ -2,6 +2,22 @@
 #include <string>
 using namespace std;
 
+// this is pseudo setup that needs to be in the setup to initialise connection to interface
+void pseudoSetup(){
+    Serial.begin(9600);
+    Serial.setTimeout(1);
+}
+
+// the main loop will require checking the serial regularly
+void loop(){
+    // main loop code
+
+    // message check
+    if(Serial.available() > 0){ // checks if serial has been used
+        message = Serial.readString();
+        Serial.print("Message received");
+    }
+}
 
 int main(){
     return 0;

@@ -1,7 +1,9 @@
 import tkinter as tk
 from tkinter import ttk
+import serial
 
 from datetime import datetime
+import time
 
 
 #class object for keypad
@@ -11,6 +13,9 @@ class keypad(tk.Frame):
         #inherits from tkinter import
         super().__init__(master, **kwargs)
         self.master = master
+
+        #sets up serial connection with arduino
+        arduino = serial.Serial(port='com4', baudrate=9600, timeout=.1)
 
         #General variables
         self.access_granted = False
@@ -26,7 +31,14 @@ class keypad(tk.Frame):
         self.create_keypad()
         self.update_output_window()
     
-
+    #method writes input string to serial communication
+    def serial_write(self, toArdu):
+        arduino.write(bytes(toArdu, 'utf-8'))
+        time.sleep(0.05)
+        response = arduino.readline()
+        return response
+    
+    
     #method creates keypad
     def create_keypad(self):
         #defines button style
