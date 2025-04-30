@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 import serial
+import sys
 
 from datetime import datetime
 import time
@@ -15,14 +16,14 @@ class keypad(tk.Frame):
         self.master = master
 
         #sets up serial connection with arduino
-        arduino = serial.Serial(port = find_arduino, baudrate=9600)
+        self.arduino = serial.Serial(port = 'COM5', baudrate=9600)
 
         #General variables
         self.access_granted = False
         self.text_output = ['Enter pin:']
         self.PASSKEY = ['1', '2', '3', '4']
         self.LEVEL_1_OPTIONS = ['Level 1 accessed\n', 'Switch between day/night\n']
-        self.LEVEL_2_OPTIONS = ['Add face\n', 'Delete face\n', 'Deactivate system\n', 'change pin (not entry pin)\n']
+        self.LEVEL_2_OPTIONS = ['Add face\n', 'Delete face\n', 'Deactivate system\n', 'change pin\n']
         self.entered_pin = []
         self.cursor = 2.0
 
@@ -37,16 +38,18 @@ class keypad(tk.Frame):
             for p in ports:
                 if p.manufacturer is not None and "Arduino" in p.manufacturer:
                     port = p.device
+
+        print(port)
         return port
     
     #method writes input string to serial communication
     def serial_write(self, message):
         toArdu = '<' + str(message) + '>'
-        arduino.write(bytes(toArdu, 'utf-8'))
+        self.arduino.write(bytes(toArdu, 'utf-8'))
 
     def serial_check_resp(self):
-        raw_response = arduino.read_until()
-        response = raw.decode()
+        raw_response = self.arduino.read_until()
+        response = raw_response.decode()
         return response
         
     
@@ -61,7 +64,7 @@ class keypad(tk.Frame):
             '1', '2', '3', '^',
             '4', '5', '6', 'Ent',
             '7', '8', '9', 'v',
-            'Face', '0', ' ', 'Del'
+            'Face', '0', 'Del', 'Exit'
             ]
 
         #iterates through to place buttons starting on column 10 to make room for output window
@@ -89,13 +92,28 @@ class keypad(tk.Frame):
         #button is used for both entering the pin and selecting options from menu
         elif text == 'Ent':
             if not(self.access_granted):
-                serial_write(self.entered_pin)
-                response = serial_check_resp()
-                if(response = "access_granted")
+                stringToBeSent = "";
+                for i in range(0, len(self.entered_pin)):
+                    stringToBeSent = stringToBeSent + self.entered_pin[i]
+                               
+                self.serial_write(stringToBeSent)
+                print("sent message: " + str(self.entered_pin))
+                print("waiting for response...")
+                response = self.serial_check_resp()
+                print("response received: " + response)
+                if(response.strip() == "access_granted"):
+                    print("Access granted worked")
                     self.access_granted = True
-                
+                    self.text_output = self.LEVEL_1_OPTIONS
+                else:
+                    print("access_granted failed")
+                    print(type(response))
             else:
-                print(f'User Selected: {self.text_output[int(self.cursor)-1]}')
+                self.serial_write(str(self.text_output[int(self.cursor)-1]))
+                print("sent message: " + str(self.text_output[int(self.cursor)-1]))
+                print("waiting for response...")
+                response = self.serial_check_resp()
+                print("response received: " + response)
         #delete only deletes entries for pin
         elif text == 'Del':
             if not(self.access_granted):
@@ -112,6 +130,12 @@ class keypad(tk.Frame):
         elif text == 'v':
             if(self.cursor < len(self.text_output)):
                 self.cursor += 1.0
+
+        #exits application and closes connection to arduino
+        elif text == 'Exit':
+            self.arduino.close()
+            root.destroy()
+            sys.exit()
         #deals with number key pressses
         else:
             if(self.access_granted):
