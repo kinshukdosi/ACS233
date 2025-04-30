@@ -32,6 +32,7 @@ class keypad(tk.Frame):
         self.create_keypad()
         self.update_output_window()
 
+    #function currently not used, kept in case of implementation of searching arduino port instead of hard coding
     def find_arduino(port=None):
         if port is None:
             ports = serial.tools.list_ports.comports()
@@ -109,7 +110,7 @@ class keypad(tk.Frame):
                     print("access_granted failed")
                     print(type(response))
             else:
-                self.serial_write(str(self.text_output[int(self.cursor)-1]))
+                self.serial_write(get_selection_message(str(self.text_output[int(self.cursor)-1])))
                 print("sent message: " + str(self.text_output[int(self.cursor)-1]))
                 print("waiting for response...")
                 response = self.serial_check_resp()
@@ -173,6 +174,22 @@ class keypad(tk.Frame):
         self.text_output = self.LEVEL_1_OPTIONS + self.LEVEL_2_OPTIONS
         self.text_output[0] = 'level 2 accessed\n'
         self.update_output_window()
+
+    def get_selection_message(self, selection):
+        if selection.strip == 'Switch between day/night':
+            return "switchDN"
+        else if selection.strip == 'Add face':
+            return "addF"
+        else if selection.strip == 'Delete face':
+            return "delF"
+        else if selection.strip == 'Deactivate system':
+            return "deactSys"
+        else if selection.strip == 'change pin':
+            return "changePin"
+
+self.LEVEL_1_OPTIONS = ['Level 1 accessed\n', 'Switch between day/night\n']
+self.LEVEL_2_OPTIONS = ['Add face\n', 'Delete face\n', 'Deactivate system\n', 'change pin\n']
+        
             
 #causes object to be created when the program is ran
 if __name__ == "__main__":
