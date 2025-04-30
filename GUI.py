@@ -1,7 +1,9 @@
 import tkinter as tk
 from tkinter import ttk
+import serial
 
 from datetime import datetime
+import time
 
 
 #class object for keypad
@@ -11,6 +13,9 @@ class keypad(tk.Frame):
         #inherits from tkinter import
         super().__init__(master, **kwargs)
         self.master = master
+
+        #sets up serial connection with arduino
+        arduino = serial.Serial(port = find_arduino, baudrate=9600)
 
         #General variables
         self.access_granted = False
@@ -25,8 +30,26 @@ class keypad(tk.Frame):
         self.create_output_window()
         self.create_keypad()
         self.update_output_window()
-    
 
+    def find_arduino(port=None):
+        if port is None:
+            ports = serial.tools.list_ports.comports()
+            for p in ports:
+                if p.manufacturer is not None and "Arduino" in p.manufacturer:
+                    port = p.device
+        return port
+    
+    #method writes input string to serial communication
+    def serial_write(self, message):
+        toArdu = '<' + str(message) + '>'
+        arduino.write(bytes(toArdu, 'utf-8'))
+
+    def serial_check_resp(self):
+        raw_response = arduino.read_until()
+        response = raw.decode()
+        return response
+        
+    
     #method creates keypad
     def create_keypad(self):
         #defines button style
@@ -66,9 +89,11 @@ class keypad(tk.Frame):
         #button is used for both entering the pin and selecting options from menu
         elif text == 'Ent':
             if not(self.access_granted):
-                if self.entered_pin == self.PASSKEY:
+                serial_write(self.entered_pin)
+                response = serial_check_resp()
+                if(response = "access_granted")
                     self.access_granted = True
-                    self.text_output = self.LEVEL_1_OPTIONS
+                
             else:
                 print(f'User Selected: {self.text_output[int(self.cursor)-1]}')
         #delete only deletes entries for pin
