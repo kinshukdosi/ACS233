@@ -6,67 +6,82 @@ import pandas as pd
 
 # Function to open/create database and ensure the table exists
 # Full path to your MS Access database (.accdb) in r' format
-def open_database(database_path):
-    conn_str = (
-        r'DRIVER={Microsoft Access Driver (*.mdb, *.accdb)};'
-        rf'DBQ={database_path};'
-    )
-    conn = pyodbc.connect(conn_str)
-    cur = conn.cursor()
 
-    try:
-        cur.execute("""CREATE TABLE log 
-                    (id AUTOINCREMENT PRIMARY KEY, 
-                     [date] TEXT, 
-                     [time] TEXT, 
-                     activity TEXT, 
-                     action TEXT)""")
-        conn.commit()
-        print('Table created successfully.')
-    except Exception as e:
-        print('Table already exists or another error:', e)
+class DatabaseTable:
+    def __init__(self, database_path, table_name, fields):
+        conn_str = (
+            r'DRIVER={Microsoft Access Driver (*.mdb, *.accdb)};'
+            rf'DBQ={database_path};'
+        )
+        conn = pyodbc.connect(conn_str)
+        cur = conn.cursor()
+        field_definitions = ['id AUTOINCREMENT PRIMARY KEY']
+        for field_name, field_type in fields.items():
+            field_definitions.append(f"{field_name} {field_type}")
 
-    return conn, cur
+        field_definitions_string = ', '.join(field_definitions)
+        print(field_definitions_string)
+        create_sql = f"CREATE TABLE {table_name} ({field_definitions_string})"
 
+        try:
+            cur.execute(create_sql)
+            conn.commit()
+            print('Table created successfully.')
+        except Exception as e:
+            print('Table already exists or another error:', e)
 
-# Function to add a new record
-def add_to_database(conn, cur, activity_val, action_val):
-    now = datetime.now()
-    formatted_date = now.strftime("%d/%m/%y")
-    formatted_time = now.strftime("%H:%M:%S")
+        self.conn = conn
+        self.cur = cur
+        self.fields = fields
+        self.field_string = ', '.join(fields.keys())
+        self.table_name = table_name
 
-    cur.execute("""INSERT INTO log ([date], [time], activity, action) 
-                   VALUES (?, ?, ?, ?);""", (formatted_date, formatted_time, activity_val, action_val))
-    conn.commit()
-    print('Record added.')
+    # Function to add a new record
+    def add_record(self, records):
+        placeholders = ', '.join(['?'] * len(records))
+        insert_sql = f"INSERT INTO {self.table_name} ({self.field_string}) VALUES ({placeholders})"
 
+        try:
+            self.cur.execute(insert_sql, records)
+            self.conn.commit()
+            print('Record added.')
+        except Exception as e:
+            print("Insert error:", e)
 
-# Function to export table to CSV
-def export_to_csv(conn):
-    try:
-        df = pd.read_sql_query("SELECT * FROM log", conn)
-        df.to_csv("log.csv", index=False)
-        print('Exported to log.csv.')
-    except Exception as e:
-        print("Export error:", e)
+    def delete_record(self, field_name, value):
+        """
+        Deletes records where field_name == value.
+        Use with care – this can delete multiple records if the field is not unique.
+        """
+        try:
+            sql = f"DELETE FROM {self.table_name} WHERE {field_name} = ?"
+            self.cur.execute(sql, (value,))
+            self.conn.commit()
+            print(f"Deleted record(s) where {field_name} = {value}")
+        except Exception as e:
+            print("Delete error:", e)
+
+    def close_connection(self):
+        self.cur.close()
+        self.conn.close()
 
 
 # --- MAIN PROGRAM ---
 
 if __name__ == "__main__":
     # Full path to your MS Access database (.accdb)
-    database_path = r''
+    db_path = r'C:\Users\vasee\Downloads\lab09\ACS233\dtb.accdb'
+
+    db_fields = {'[date]': 'TEXT', '[time]': 'TEXT', 'activity': 'TEXT', 'action': 'TEXT'}
 
     # Open the database
-    conn, cur = open_database(database_path)
+    logTable = DatabaseTable(db_path, 'log', db_fields)
 
     # Add a sample record
-    add_to_database(conn, cur, 'Testing Activity', 'Started')
+    logTable.add_record(['hello', 'hu', 'ds', 'dsds'])
 
-    # Export to CSV
-    #export_to_csv(conn)
+    logTable.delete_record('id', 1)
 
     # Close the connection
-    cur.close()
-    conn.close()
+    logTable.close_connection()
     print('Database connection closed.')
