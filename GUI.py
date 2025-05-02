@@ -4,6 +4,7 @@ import serial
 import sys
 
 from datetime import datetime
+from databaseManagement import DatabaseTable
 import time
 
 
@@ -31,6 +32,10 @@ class keypad(tk.Frame):
         self.create_output_window()
         self.create_keypad()
         self.update_output_window()
+
+        #Initialises Log database
+        db_fields = {'[Date]': 'TEXT', '[Time]': 'TEXT', 'Activity': 'TEXT', 'Action': 'TEXT'}
+        self.logTable = DatabaseTable(r'securityRecords.accdb', 'Log', db_fields)
 
     #function currently not used, kept in case of implementation of searching arduino port instead of hard coding
     def find_arduino(port=None):
@@ -89,6 +94,7 @@ class keypad(tk.Frame):
         elif text == 'Face':
             if(self.access_granted):
                 self.level_2_access()
+                self.logTable.add_record([datetime.now().strftime("%d/%m/%y"), datetime.now().strftime("%H:%M:%S"), 'Access granted', 'Level 2 access'])
         #deals with enter button
         #button is used for both entering the pin and selecting options from menu
         elif text == 'Ent':
@@ -106,11 +112,13 @@ class keypad(tk.Frame):
                     print("Access granted worked")
                     self.access_granted = True
                     self.text_output = self.LEVEL_1_OPTIONS
+                    self.logTable.add_record([datetime.now().strftime("%d/%m/%y"), datetime.now().strftime("%H:%M:%S"), 'Access granted', 'Level 2 access'])
                 else:
                     print("access_granted failed")
                     print(type(response))
             else:
                 self.serial_write(get_selection_message(str(self.text_output[int(self.cursor)-1])))
+                self.logTable.add_record([datetime.now().strftime("%d/%m/%y"), datetime.now().strftime("%H:%M:%S"), str(self.text_output[int(self.cursor)-1]), '-'])
                 print("sent message: " + str(self.text_output[int(self.cursor)-1]))
                 print("waiting for response...")
                 response = self.serial_check_resp()
