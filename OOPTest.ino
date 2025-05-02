@@ -1,12 +1,10 @@
 // INCLUDE CLASSES //
 // #include "Actuator.h"
-//#include "LED.h"
-//#include "Buzzer.h"
-//#include "Solenoid.h"
-//#include "Sensor.h"
-#include "Session.h"
+#include "LED.h"
+#include "Buzzer.h"
+#include "Solenoid.h"
+#include "Sensor.h"
 
-/*
 // PINS //
 const byte pinMagnetic = 5; // Digital
 const byte pinButton = 49;  // Digital
@@ -32,10 +30,6 @@ LED LED_R1(pinLED_R1, "Rec_LED_1", 200);
 LED LED_R2(pinLED_R2, "Rec_LED_2", 400);
 LED LED_Y(pinLED_Y, "Gal_LED_1", 600);
 LED LED_G(pinLED_G, "Gal_LED_2", 800);
-*/
-
-Session MainSession('D');
-
 
 // SET UP //
 void setup() {
@@ -44,10 +38,14 @@ void setup() {
 
 // MAIN LOOP //
 void loop() {
-    Serial.println("Running!");
-    MainSession.run();
+  //testLEDs();
+  //testBuzzer();
+  //testSolenoid();
+  testMagnetic();
+  testButton();
+  testPIR();
 }
-/*
+
 // TEST FUNCTIONS //
 void testLEDs() {
   LED_R1.on();
@@ -115,4 +113,3 @@ void testPIR(){
     LED_Y.off();
   }
 }
-*/

@@ -1,8 +1,9 @@
 #include "Actuator.h"
 
 Actuator::Actuator(){
-    pin = 0;
-    name[0] = '\0';
+    this->pin = 0;
+    this->name[0] = '\0';
+    
     pinMode(pin, OUTPUT);
     off();
 }

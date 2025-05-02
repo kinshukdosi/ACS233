@@ -8,6 +8,7 @@ class Buzzer: public Actuator{
         //int buzzerCutOffTime;
         //int buzzerActivatedTimestamp;
     public:
+        Buzzer();
         Buzzer(int pin, char name[], int pitch);
         //void soundAlarm();
         on();

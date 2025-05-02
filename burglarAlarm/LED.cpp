@@ -1,5 +1,15 @@
 #include "LED.h"
 
+LED::LED(){
+    this->pin = 0;
+    this->flashFreq = 200;
+
+    this->name[0] = '\0';
+
+    pinMode(pin, OUTPUT);
+    off();
+}
+
 LED::LED(int pin, char name[], int flashFreq){
     this->pin = pin;
     this->flashFreq = flashFreq;
