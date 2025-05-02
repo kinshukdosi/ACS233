@@ -4,7 +4,7 @@ import serial
 import sys
 
 from datetime import datetime
-from databaseManagement import DatabaseTable
+#from databaseManagement import DatabaseTable
 import time
 
 
@@ -21,6 +21,7 @@ class keypad(tk.Frame):
 
         #General variables
         self.access_granted = False
+        self.response_selection_mode = False
         self.text_output = ['Enter pin:']
         self.PASSKEY = ['1', '2', '3', '4']
         self.LEVEL_1_OPTIONS = ['Level 1 accessed\n', 'Switch between day/night\n']
@@ -56,6 +57,8 @@ class keypad(tk.Frame):
     def serial_check_resp(self):
         raw_response = self.arduino.read_until()
         response = raw_response.decode()
+        if(response == "access_denied"):
+            access_granted = False
         return response
         
     
@@ -116,13 +119,26 @@ class keypad(tk.Frame):
                 else:
                     print("access_granted failed")
                     print(type(response))
+            elif (self.response_selection_mode):
+                self.serial_write(self.text_output[int(self.cursor)-1])
+                self.response_selection_mode = False
+                self.level_2_access()
             else:
-                self.serial_write(get_selection_message(str(self.text_output[int(self.cursor)-1])))
+                self.serial_write(self.get_selection_message(str(self.text_output[int(self.cursor)-1])))
                 self.logTable.add_record([datetime.now().strftime("%d/%m/%y"), datetime.now().strftime("%H:%M:%S"), str(self.text_output[int(self.cursor)-1]), '-'])
                 print("sent message: " + str(self.text_output[int(self.cursor)-1]))
                 print("waiting for response...")
                 response = self.serial_check_resp()
                 print("response received: " + response)
+                if(response == ""):
+                    self.text_output = []
+                elif(response.split("$")[0] == "delF"):
+                    self.text_output = response.split("$")
+                    self.response_selection_mode = True
+                    self.update_output_window()
+                    
+                    
+                    
         #delete only deletes entries for pin
         elif text == 'Del':
             if not(self.access_granted):
@@ -184,20 +200,18 @@ class keypad(tk.Frame):
         self.update_output_window()
 
     def get_selection_message(self, selection):
-        if selection.strip == 'Switch between day/night':
+        if selection.strip() == 'Switch between day/night':
             return "switchDN"
-        else if selection.strip == 'Add face':
+        elif selection.strip() == 'Add face':
             return "addF"
-        else if selection.strip == 'Delete face':
+        elif selection.strip() == 'Delete face':
             return "delF"
-        else if selection.strip == 'Deactivate system':
+        elif selection.strip() == 'Deactivate system':
             return "deactSys"
-        else if selection.strip == 'change pin':
+        elif selection.strip() == 'change pin':
             return "changePin"
-
-self.LEVEL_1_OPTIONS = ['Level 1 accessed\n', 'Switch between day/night\n']
-self.LEVEL_2_OPTIONS = ['Add face\n', 'Delete face\n', 'Deactivate system\n', 'change pin\n']
-        
+        else:
+            return selection
             
 #causes object to be created when the program is ran
 if __name__ == "__main__":
