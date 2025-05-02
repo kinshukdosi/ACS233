@@ -6,6 +6,6 @@ class LED: public Actuator{
     private:
         int flashFreq;
     public:
-    LED(int pin, char name[], int flashFreq);
-    void flash();
+        LED(int pin, char name[], int flashFreq);
+        void flash();
 };
