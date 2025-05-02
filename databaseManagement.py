@@ -1,14 +1,15 @@
 # Imports
 import pyodbc
-from datetime import datetime
+import os
 import pandas as pd
-
 
 # Function to open/create database and ensure the table exists
 # Full path to your MS Access database (.accdb) in r' format
 
+
 class DatabaseTable:
     def __init__(self, database_path, table_name, fields):
+        database_path = os.path.abspath(database_path)
         conn_str = (
             r'DRIVER={Microsoft Access Driver (*.mdb, *.accdb)};'
             rf'DBQ={database_path};'
@@ -20,7 +21,6 @@ class DatabaseTable:
             field_definitions.append(f"{field_name} {field_type}")
 
         field_definitions_string = ', '.join(field_definitions)
-        print(field_definitions_string)
         create_sql = f"CREATE TABLE {table_name} ({field_definitions_string})"
 
         try:
@@ -54,12 +54,27 @@ class DatabaseTable:
         Use with care – this can delete multiple records if the field is not unique.
         """
         try:
-            sql = f"DELETE FROM {self.table_name} WHERE {field_name} = ?"
-            self.cur.execute(sql, (value,))
-            self.conn.commit()
-            print(f"Deleted record(s) where {field_name} = {value}")
+            record_to_delete = pd.read_sql_query(f"SELECT * FROM {self.table_name} WHERE {field_name} = ?", self.conn,params=(value,))
+
+            if record_to_delete.empty:
+                print("Record doesn't exist and is not deleted")
+
+            else:
+                sql = f"DELETE FROM {self.table_name} WHERE {field_name} = ?"
+                self.cur.execute(sql, (value,))
+                self.conn.commit()
+                print(f"Deleted record(s) where {field_name} = {value}")
+
         except Exception as e:
             print("Delete error:", e)
+
+    def read_table(self):
+        try:
+            data = pd.read_sql_query(f"SELECT * FROM {self.table_name}", self.conn)
+            return data
+        except Exception as e:
+            print("Read error:", e)
+            return pd.DataFrame()
 
     def close_connection(self):
         self.cur.close()
@@ -70,18 +85,17 @@ class DatabaseTable:
 
 if __name__ == "__main__":
     # Full path to your MS Access database (.accdb)
-    db_path = r'C:\Users\vasee\Downloads\lab09\ACS233\dtb.accdb'
+    db_path = r'securityRecords.accdb'
 
-    db_fields = {'[date]': 'TEXT', '[time]': 'TEXT', 'activity': 'TEXT', 'action': 'TEXT'}
+    db_fields = {'[Date]': 'TEXT', '[Time]': 'TEXT', 'Activity': 'TEXT', 'Action': 'TEXT'}
 
     # Open the database
     logTable = DatabaseTable(db_path, 'log', db_fields)
 
+    print(logTable.read_table())
+
     # Add a sample record
     logTable.add_record(['hello', 'hu', 'ds', 'dsds'])
 
-    logTable.delete_record('id', 1)
-
     # Close the connection
     logTable.close_connection()
-    print('Database connection closed.')
