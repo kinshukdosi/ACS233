@@ -58,9 +58,26 @@ class keypad(tk.Frame):
         response = raw_response.decode()
         print("Response from arduino: " + response)
         print(type(response))
+
+        # Sensor is tripped
+        if response.strip()[0] == 's':
+            sensor_name = response.strip()[1:]
+            self.logTable.add_record(
+                [datetime.now().strftime("%d/%m/%y"), datetime.now().strftime("%H:%M:%S"), 'Alarm activated',
+                 sensor_name])
+
+        # Pin is wrong 3 times
+        elif response.strip()[0] == 'p':
+            self.logTable.add_record(
+                [datetime.now().strftime("%d/%m/%y"), datetime.now().strftime("%H:%M:%S"), 'Alarm activated',
+                 'Pin wrong too many times'])
+
+        # System is timed out
         if(response.strip() == "timeOut"):
             print("returning to log in screen")
             self.access_granted = False
+            self.logTable.add_record(
+                [datetime.now().strftime("%d/%m/%y"), datetime.now().strftime("%H:%M:%S"), 'Logged out', 'Time out'])
             self.pin_entry_screen()
         return response
         
@@ -96,7 +113,7 @@ class keypad(tk.Frame):
             print("Access granted worked")
             self.access_granted = True
             self.text_output = self.LEVEL_1_OPTIONS
-            self.logTable.add_record([datetime.now().strftime("%d/%m/%y"), datetime.now().strftime("%H:%M:%S"), 'Access granted', 'Level 1 access'])
+            self.logTable.add_record([datetime.now().strftime("%d/%m/%y"), datetime.now().strftime("%H:%M:%S"), 'Level 1 access', '-'])
         else:
             print("access_granted failed")
             print(type(response))
