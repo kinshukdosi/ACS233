@@ -41,6 +41,10 @@ Session::Session(char systemMode){
     this->timeTriggered = 0; // Default to 0, not used until sensor tripped
     this->alarmTriggered = false;
     this->prevAlarmTriggered = false;
+    
+    // Variables for receiving messages
+    this->newMessage = false;
+    this->receivedMessage[32];
 
     // Instantiate LEDs
     this->alarmLEDs[0] = new LED(pinLED_1, "REC_LED_1", 500);
@@ -108,6 +112,13 @@ void Session::run(){
   else {
       deactivateAlarm();
   }
+
+  // Checks for a new message
+  SerialRead();
+  // Handles messages once received
+  if(newMessage){
+    SerialWrite('£', receivedMessage);
+  }
 }
 
 void Session::SerialWrite(char prefix, char string[]){
@@ -121,7 +132,34 @@ void Session::SerialWrite(char prefix, char string[]){
 }
 
 void Session::SerialRead(){
+  static boolean receiving = false;
+  static byte index = 0;
+  char startMarker = '<';
+  char endMarker = '>';
+  char receivedChar;
+  int maxChars = 32;
+    while(Serial.available() > 0 && newMessage == false){
+        receivedChar = Serial.read();
 
+        if(receiving == true){
+            if(receivedChar != endMarker){
+                receivedMessage[index] = receivedChar;
+                index++;
+                if(index >= maxChars){
+                    index = maxChars - 1;
+                }
+            }
+            else{
+                receivedMessage[index] = '\0';
+                receiving = false;
+                index = 0;
+                newMessage = true;
+            }
+        }
+        else if (receivedChar == startMarker){
+            receiving = true;
+        }
+    }
 }
 
 bool Session::checkSensors(Sensor* sensorArray[], int arrLen){

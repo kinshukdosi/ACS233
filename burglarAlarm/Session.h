@@ -17,6 +17,11 @@ class Session{
         bool alarmTriggered;
         bool prevAlarmTriggered; // Used to detect change in state
 
+        
+        // Variables for receiving messages
+        bool newMessage;
+        char receivedMessage[32];
+
         LED* alarmLEDs[5];
         Buzzer* alarmBuzzers[5];
         Sensor* daySensors[6];
