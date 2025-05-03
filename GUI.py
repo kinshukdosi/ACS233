@@ -3,8 +3,8 @@ from tkinter import ttk
 import serial
 import sys
 
+from databaseManagement import DatabaseTable
 from datetime import datetime
-#from databaseManagement import DatabaseTable
 import time
 
 
@@ -21,9 +21,7 @@ class keypad(tk.Frame):
 
         #General variables
         self.access_granted = False
-        self.response_selection_mode = False
-        self.text_output = ['Enter pin:']
-        self.PASSKEY = ['1', '2', '3', '4']
+        self.pin_entry_screen()
         self.LEVEL_1_OPTIONS = ['Level 1 accessed\n', 'Switch between day/night\n']
         self.LEVEL_2_OPTIONS = ['Add face\n', 'Delete face\n', 'Deactivate system\n', 'change pin\n']
         self.entered_pin = []
@@ -52,13 +50,18 @@ class keypad(tk.Frame):
     #method writes input string to serial communication
     def serial_write(self, message):
         toArdu = '<' + str(message) + '>'
+        print("Message to Arduino: " + toArdu)
         self.arduino.write(bytes(toArdu, 'utf-8'))
 
     def serial_check_resp(self):
         raw_response = self.arduino.read_until()
         response = raw_response.decode()
-        if(response == "access_denied"):
-            access_granted = False
+        print("Response from arduino: " + response)
+        print(type(response))
+        if(response.strip() == "timeOut"):
+            print("returning to log in screen")
+            self.access_granted = False
+            self.pin_entry_screen()
         return response
         
     
@@ -86,6 +89,17 @@ class keypad(tk.Frame):
                 col=10
                 row+=1
     
+    def access_attempt(self):            
+        self.serial_write(''.join(self.entered_pin))
+        response = self.serial_check_resp()
+        if(response.strip() == "access_granted"):
+            print("Access granted worked")
+            self.access_granted = True
+            self.text_output = self.LEVEL_1_OPTIONS
+            self.logTable.add_record([datetime.now().strftime("%d/%m/%y"), datetime.now().strftime("%H:%M:%S"), 'Access granted', 'Level 1 access'])
+        else:
+            print("access_granted failed")
+            print(type(response))
 
     #method called when a button is pressed
     def key_pressed(self, text):
@@ -102,40 +116,12 @@ class keypad(tk.Frame):
         #button is used for both entering the pin and selecting options from menu
         elif text == 'Ent':
             if not(self.access_granted):
-                stringToBeSent = "";
-                for i in range(0, len(self.entered_pin)):
-                    stringToBeSent = stringToBeSent + self.entered_pin[i]
-                               
-                self.serial_write(stringToBeSent)
-                print("sent message: " + str(self.entered_pin))
-                print("waiting for response...")
-                response = self.serial_check_resp()
-                print("response received: " + response)
-                if(response.strip() == "access_granted"):
-                    print("Access granted worked")
-                    self.access_granted = True
-                    self.text_output = self.LEVEL_1_OPTIONS
-                    self.logTable.add_record([datetime.now().strftime("%d/%m/%y"), datetime.now().strftime("%H:%M:%S"), 'Access granted', 'Level 2 access'])
-                else:
-                    print("access_granted failed")
-                    print(type(response))
-            elif (self.response_selection_mode):
-                self.serial_write(self.text_output[int(self.cursor)-1])
-                self.response_selection_mode = False
-                self.level_2_access()
+                self.access_attempt()
             else:
                 self.serial_write(self.get_selection_message(str(self.text_output[int(self.cursor)-1])))
                 self.logTable.add_record([datetime.now().strftime("%d/%m/%y"), datetime.now().strftime("%H:%M:%S"), str(self.text_output[int(self.cursor)-1]), '-'])
-                print("sent message: " + str(self.text_output[int(self.cursor)-1]))
                 print("waiting for response...")
                 response = self.serial_check_resp()
-                print("response received: " + response)
-                if(response == ""):
-                    self.text_output = []
-                elif(response.split("$")[0] == "delF"):
-                    self.text_output = response.split("$")
-                    self.response_selection_mode = True
-                    self.update_output_window()
                     
                     
                     
@@ -193,6 +179,10 @@ class keypad(tk.Frame):
             self.output_window.tag_add('highlightline', self.cursor, self.cursor+1.0)
             self.output_window.tag_config('highlightline', background = "white", foreground = 'black')
 
+    def pin_entry_screen(self):
+        self.text_output = ['Enter pin:']
+
+
     #possibly temporary method to show level 2 options
     def level_2_access(self):
         self.text_output = self.LEVEL_1_OPTIONS + self.LEVEL_2_OPTIONS
@@ -212,10 +202,19 @@ class keypad(tk.Frame):
             return "changePin"
         else:
             return selection
-            
+
+
+    def check_comms(self):
+        if self.arduino.in_waiting:
+            self.serial_check_resp()
+
+        root.after(100, self.check_comms)
+
 #causes object to be created when the program is ran
 if __name__ == "__main__":
     root = tk.Tk()
     keypad = keypad(root)
     keypad.pack(padx=20, pady=20)
+    print(keypad.logTable.read_table())
+    keypad.check_comms()
     root.mainloop()

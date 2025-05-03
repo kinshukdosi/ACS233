@@ -40,13 +40,14 @@ Session MainSession('D');
 // SET UP //
 void setup() {
   Serial.begin(9600);
+
 }
 
 // MAIN LOOP //
 void loop() {
     Serial.println("Running!");
-    MainSession.run();
 }
+
 /*
 // TEST FUNCTIONS //
 void testLEDs() {
