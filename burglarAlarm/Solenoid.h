@@ -6,6 +6,7 @@ class Solenoid: public Actuator{
     //private:
         //int state;
     public:
+        Solenoid();
         Solenoid(int pin, char name[]); //, int state);
         on();
         off();

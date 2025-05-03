@@ -1,5 +1,16 @@
 #include "Solenoid.h"
 
+Solenoid::Solenoid(){ //, int state){
+    this->pin = pin;
+    //this->state = state;
+
+    // Write a string, ensuring it doesn't execeed 15 chars + '\0'
+    this->name[0] = '\0';
+    
+    pinMode(pin, OUTPUT);
+    on();
+}
+
 Solenoid::Solenoid(int pin, char name[]){ //, int state){
     this->pin = pin;
     //this->state = state;

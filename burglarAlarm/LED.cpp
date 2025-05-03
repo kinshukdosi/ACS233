@@ -3,6 +3,8 @@
 LED::LED(){
     this->pin = 0;
     this->flashFreq = 200;
+    this->flashTimer = 0;
+    this->prevState = false;
 
     this->name[0] = '\0';
 
@@ -13,6 +15,8 @@ LED::LED(){
 LED::LED(int pin, char name[], int flashFreq){
     this->pin = pin;
     this->flashFreq = flashFreq;
+    this->flashTimer = 0;
+    this->prevState = false;
 
     // Write a string, ensuring it doesn't execeed 15 chars + '\0'
     int i = 0;
@@ -27,8 +31,16 @@ LED::LED(int pin, char name[], int flashFreq){
 }
 
 // Flash function needs reworking
-void LED::flash(){
-    on();
-    delay(flashFreq);
-    off();
+void LED::on(){
+    if (millis() > flashTimer+flashFreq){
+        flashTimer = millis();
+        if (prevState){
+            digitalWrite(pin, LOW);
+            prevState = false;
+        }
+        else{
+            digitalWrite(pin, HIGH);
+            prevState = true;
+        }
+    }
 }
