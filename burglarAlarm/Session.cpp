@@ -117,7 +117,7 @@ void Session::run(){
   SerialRead();
   // Handles messages once received
   if(newMessage){
-    SerialWrite('£', receivedMessage);
+    SerialWrite('M', receivedMessage);
   }
 }
 
