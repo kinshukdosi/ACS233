@@ -107,7 +107,7 @@ class keypad(tk.Frame):
                 row+=1
     
     def access_attempt(self):            
-        self.serial_write(''.join(self.entered_pin))
+        self.serial_write("p"+''.join(self.entered_pin))
         response = self.serial_check_resp()
         if(response.strip() == "access_granted"):
             print("Access granted worked")
