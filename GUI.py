@@ -198,14 +198,12 @@ class keypad(tk.Frame):
 
     def pin_entry_screen(self):
         self.text_output = ['Enter pin:']
-        self.update_output_window()
 
 
     #possibly temporary method to show level 2 options
     def level_2_access(self):
         self.text_output = self.LEVEL_1_OPTIONS + self.LEVEL_2_OPTIONS
         self.text_output[0] = 'level 2 accessed\n'
-        self.update_output_window()
 
     def get_selection_message(self, selection):
         if selection.strip() == 'Switch between day/night':
