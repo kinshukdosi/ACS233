@@ -118,6 +118,7 @@ void Session::run(){
   // Handles messages once received
   if(newMessage){
     SerialWrite('M', receivedMessage);
+    newMessage = false;
   }
 }
 
