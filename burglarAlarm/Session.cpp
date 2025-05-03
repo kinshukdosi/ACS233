@@ -102,7 +102,7 @@ void Session::run(){
     if ((*daySensors[5]).isTriggered()){
         alarmTriggered = false;
         (*daySensors[5]).getName(sensorName);
-        Serial.println(sensorName);
+       // Serial.println(sensorName);
     }
   
   // Activate alarm if necessary
@@ -170,7 +170,7 @@ bool Session::checkSensors(Sensor* sensorArray[], int arrLen){
       if ((*sensorArray[i]).isTriggered()){
         sensorTripped = true;
         (*sensorArray[i]).getName(sensorName);
-        SerialWrite('S', sensorName);
+        SerialWrite('s', sensorName);
       }
     }
     return sensorTripped;
