@@ -73,7 +73,7 @@ class keypad(tk.Frame):
                  'Pin wrong too many times'])
 
         # System is timed out
-        if(response.strip() == "timeOut"):
+        if(response.strip() == ""):
             print("returning to log in screen")
             self.access_granted = False
             self.logTable.add_record(
@@ -198,6 +198,7 @@ class keypad(tk.Frame):
 
     def pin_entry_screen(self):
         self.text_output = ['Enter pin:']
+        self.update_output_window()
 
 
     #possibly temporary method to show level 2 options
