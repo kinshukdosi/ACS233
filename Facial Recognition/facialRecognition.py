@@ -1,11 +1,24 @@
 import cv2, face_recognition, pickle, os
 from tkinter import *
+import sys
+parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+sys.path.append(parent_dir)
+from databaseManagement import DatabaseTable
+
+db_path = r'securityRecords.accdb'
+face_fields = {'Name': 'TEXT'}  # You can add 'ID' if needed, but Access will autogenerate one
+face_table = DatabaseTable(db_path, 'faces', face_fields)
 
 cascPathface = os.path.dirname(
  cv2.__file__) + "/data/haarcascade_frontalface_alt2.xml"
 faceCascade = cv2.CascadeClassifier(cascPathface)
 data = pickle.loads(open('face_enc', "rb").read()) # Face encodings of previously stored images of people
 noInput = cv2.imread('noInput.png')
+
+# Create/access the database
+db_path = r'securityRecords.accdb'
+face_fields = {'Name': 'TEXT'}  # You can add 'ID' if needed, but Access will autogenerate one
+face_table = DatabaseTable(db_path, 'faces', face_fields)
 
 
 def startVideo(cameraID):
@@ -60,6 +73,8 @@ def analyseFrame(video):
                 counts[name] = counts.get(name, 0) + 1
             name = max(counts, key=counts.get)
         names.append(name) # The person who matches strongest with the person in the frame is stored
+        face_table.add_record([name])
+
 
          
         for ((x, y, w, h), name) in zip(faces, names):

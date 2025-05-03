@@ -34,8 +34,8 @@ class keypad(tk.Frame):
         self.update_output_window()
 
         #Initialises Log database
-        db_fields = {'[Date]': 'TEXT', '[Time]': 'TEXT', 'Activity': 'TEXT', 'Action': 'TEXT'}
-        self.logTable = DatabaseTable(r'securityRecords.accdb', 'Log', db_fields)
+        self.db_fields = {'[Date]': 'TEXT', '[Time]': 'TEXT', 'Activity': 'TEXT', 'Action': 'TEXT'}
+        self.logTable = DatabaseTable(r'securityRecords.accdb', 'Log', self.db_fields)
 
     #function currently not used, kept in case of implementation of searching arduino port instead of hard coding
     def find_arduino(port=None):
@@ -195,6 +195,9 @@ class keypad(tk.Frame):
         else if selection.strip == 'change pin':
             return "changePin"
 
+    def get_date_index(self):
+        return list(self.db_fields.keys()).index('[Date]')
+
 self.LEVEL_1_OPTIONS = ['Level 1 accessed\n', 'Switch between day/night\n']
 self.LEVEL_2_OPTIONS = ['Add face\n', 'Delete face\n', 'Deactivate system\n', 'change pin\n']
         
@@ -204,4 +207,6 @@ if __name__ == "__main__":
     root = tk.Tk()
     keypad = keypad(root)
     keypad.pack(padx=20, pady=20)
+    keypad.logTable.delete_old_records(keypad.get_date_index())
+
     root.mainloop()
