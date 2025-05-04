@@ -1,24 +1,12 @@
 import cv2, face_recognition, pickle, os
-from tkinter import *
-import sys
-parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-sys.path.append(parent_dir)
-from databaseManagement import DatabaseTable
+import sqlite3
 
-db_path = r'securityRecords.accdb'
-face_fields = {'Name': 'TEXT'}  # You can add 'ID' if needed, but Access will autogenerate one
-face_table = DatabaseTable(db_path, 'faces', face_fields)
 
 cascPathface = os.path.dirname(
  cv2.__file__) + "/data/haarcascade_frontalface_alt2.xml"
 faceCascade = cv2.CascadeClassifier(cascPathface)
 data = pickle.loads(open('face_enc', "rb").read()) # Face encodings of previously stored images of people
 noInput = cv2.imread('noInput.png')
-
-# Create/access the database
-db_path = r'securityRecords.accdb'
-face_fields = {'Name': 'TEXT'}  # You can add 'ID' if needed, but Access will autogenerate one
-face_table = DatabaseTable(db_path, 'faces', face_fields)
 
 
 def startVideo(cameraID):
@@ -72,18 +60,20 @@ def analyseFrame(video):
                 name = data["names"][i]
                 counts[name] = counts.get(name, 0) + 1
             name = max(counts, key=counts.get)
+            
         names.append(name) # The person who matches strongest with the person in the frame is stored
-        face_table.add_record([name])
 
-
-         
+        
         for ((x, y, w, h), name) in zip(faces, names):
             if name == "Unknown":
                 cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 0, 255), 2) # Placing red box around face if unrecognised
             else:
                 cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2) # Placing green box around the face if recognised
-            cv2.putText(frame, name, (x+10, y-10), cv2.FONT_HERSHEY_SIMPLEX, # Writing text to identify face
-            1, (0, 255, 0), 2)
+            
+            if name != "Unknown":
+                cv2.putText(frame, f"Employee ID: {name}", (x+10, y-10), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+            else:
+                cv2.putText(frame, "UNKNOWN", (x+10, y-10), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
         
         for name in names:
             if name == "Unknown": # If person is not recognised
@@ -91,7 +81,6 @@ def analyseFrame(video):
                 
     return frame # Returns the frame with analysis complete and any necessary boxes/text written
 
-alerted = []
 def alert():
     print("Alert!!!!") 
     
@@ -103,6 +92,5 @@ def start(cameraID):
         cv2.imshow("Frame", frame)
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
-
 
 start(1)
