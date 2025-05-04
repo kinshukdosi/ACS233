@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 import sys
 import time
+from databaseManagement import DatabaseTable
 
 from datetime import datetime
 
@@ -19,13 +20,19 @@ class keypad(tk.Frame):
         self.text_output = []
         self.entered_pin = []
 
+        #System Variables
         self.access_level = 0
         self.system_mode = 'I'
+        self.alarm_state = 'F'
 
         #calling methods to create window
         self.create_output_window()
         self.create_keypad()
         self.update_output_window()
+
+        # Creates a database object
+        db_fields = {'[Date]': 'TEXT', '[Time]': 'TEXT', 'Action': 'TEXT', 'Type': 'TEXT'}
+        self.logTable = DatabaseTable(r'securityRecords.accdb', 'log', db_fields)
     
     #method creates keypad
     def create_keypad(self):
@@ -74,6 +81,10 @@ class keypad(tk.Frame):
         #
         elif text == 'Face':
             self.access_level += 1
+            self.logTable.add_record(
+                [datetime.now().strftime("%d/%m/%y"), datetime.now().strftime("%H:%M:%S"), 'Access Level 2 granted',
+                 'name needs to be entered'])
+
         elif text == 'Ent':
             if(self.access_level == 0):
                 self.key_callback(''.join(self.entered_pin))
