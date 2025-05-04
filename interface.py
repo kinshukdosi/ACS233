@@ -4,6 +4,7 @@ import tkinter as tk
 from databaseManagement import DatabaseTable
 from datetime import datetime
 
+
 import serial
 
 def keypad_selection(text):
@@ -11,7 +12,10 @@ def keypad_selection(text):
     if(keypad.access_level == 0):
         serial_write(arduino, 'p' + text)
     else:
-        serial_write(arduino, get_selection_message(text))
+        if(keypad.access_level == 1 and text == 'Face'):
+            
+        else:
+            serial_write(arduino, get_selection_message(text))
 
 
 def get_selection_message(selection):

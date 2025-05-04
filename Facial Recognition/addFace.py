@@ -29,9 +29,15 @@ def captureFace(name, frame):
     conn.close()
 
     if not os.path.exists(f"Images/{ID}"):
-        os.mkdir(f"Images/{ID}")
-    imageFilePath = f"Images/{ID}/{datetime.datetime.now()}.png"
-    cv2.imwrite(imageFilePath, frame)
+        os.makedirs(f"Images/{ID}")
+
+    # Create a filename without illegal characters
+    timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    imageFilePath = f"Images/{ID}/{timestamp}.png"
+
+    print(f"Saving image to: {imageFilePath}")
+    success = cv2.imwrite(imageFilePath, frame)
+    print("Success:", success)
 
 
 
@@ -53,7 +59,7 @@ def startAddFace(cameraID, name):
             break
 
 
-cameraID = 1
-startAddFace(cameraID, "Vasee")
+cameraID = 0
+startAddFace(cameraID, "Jamie")
 updateFaces()
 

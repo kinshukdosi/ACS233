@@ -84,7 +84,7 @@ class keypad(tk.Frame):
             self.logTable.add_record(
                 [datetime.now().strftime("%d/%m/%y"), datetime.now().strftime("%H:%M:%S"), 'Access Level 2 granted',
                  'name needs to be entered'])
-
+            self.key_callback(text)
         elif text == 'Ent':
             if(self.access_level == 0):
                 self.key_callback(''.join(self.entered_pin))

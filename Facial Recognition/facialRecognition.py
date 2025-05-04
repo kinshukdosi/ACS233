@@ -93,4 +93,4 @@ def start(cameraID):
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
 
-start(1)
+start(0)
