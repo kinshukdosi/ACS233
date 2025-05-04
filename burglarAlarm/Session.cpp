@@ -35,13 +35,23 @@ const byte pinPIR_2 = 51; // Doesn't physically exist
 
 
 Session::Session(char systemMode){
+    // System state variables
     this->systemMode = systemMode; // Start in day mode
     this->accessLevel = 0;
-    this->timeDelay = 30000; // 30s to turn off alarm
-    this->alarmOffTime = 10000; // 10s limit for the buzzer. 30*60*1,000=1,800,000 for 30 mins in a real life system
-    this->timeTriggered = 0; // Default to 0, not used until sensor tripped
+
+    // Alarm variables
     this->alarmTriggered = false;
     this->prevAlarmTriggered = false;
+
+    // Delay before triggering alarm on entering building
+    this->timeDelay = 20000; // 20s to turn off alarm
+    this->timeEntered = 0;
+    this->awaitingPIN = false;
+    this->prevAwaitingPIN = false;
+
+    // Buzzer cut off variables
+    this->alarmOffTime = 10000; // 10s limit for the buzzer. 30*60*1,000=1,800,000 for 30 mins in a real life system
+    this->timeTriggered = 0; // Default to 0, not used until sensor tripped
     
     // Variables for receiving messages
     this->newMessage = false;
@@ -85,7 +95,7 @@ Session::Session(char systemMode){
 
 void Session::run(){
   // Check day mode sensors //
-  if (systemMode == 'D' or systemMode == 'N')
+  if (systemMode == 'D')
   {
     if (checkSensors(daySensors, 5)) // Need to change 5 to 6 to include panic button. Button currently used as PIN code successful
     {
@@ -96,18 +106,32 @@ void Session::run(){
   // Check night mode sensors//
   if (systemMode == 'N')
   {
-    if (checkSensors(nightSensors, 6))
-    {
+    // Night sensors will provide a delay before activating the alarm when in night mode
+    if (checkSensors(nightSensors, 6)){
+      awaitingPIN = true;
+    }
+
+    if (!prevAwaitingPIN && awaitingPIN){
+      timeEntered = millis();
+    }
+    prevAwaitingPIN = awaitingPIN;
+
+    if (awaitingPIN && millis() > timeEntered + timeDelay){
+        alarmTriggered = true;
+    }
+
+    if (checkSensors(daySensors, 5)){ // Need to change 5 to 6 to include panic button. Button currently used as PIN code successful
       alarmTriggered = true;
     }
   }
   
-  // Check for pin //
+  // Temp check for pin //
   char sensorName[16];
   // Use button as PIN correct
     if ((*daySensors[5]).isTriggered()){
         alarmTriggered = false;
         pinAttempts = 0;
+        awaitingPIN = false;
     }
   
   // Activate alarm if necessary
@@ -140,6 +164,7 @@ void Session::run(){
         if (pinAttempt == correctPIN){
             accessLevel = 1;
             pinAttempts = 0;
+            awaitingPIN = false;
             SerialWrite('p', "s");
         }
         else {

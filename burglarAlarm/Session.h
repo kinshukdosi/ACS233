@@ -12,11 +12,18 @@ class Session{
     private:
         char systemMode;
         int accessLevel;
-        int timeDelay;
-        int alarmOffTime;
-        unsigned long timeTriggered;
+
         bool alarmTriggered;
         bool prevAlarmTriggered; // Used to detect change in state
+
+        int timeDelay;
+        unsigned long timeEntered;
+        bool awaitingPIN;
+        bool prevAwaitingPIN;
+
+        int alarmOffTime;
+        unsigned long timeTriggered;
+        
 
         
         // Variables for receiving messages
