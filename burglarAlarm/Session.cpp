@@ -205,7 +205,7 @@ void Session::run(){
     }
     // Changes the access level
     else if (receivedMessage[0] == 'a'){
-      tempAccessLevel = receivedMessage[1] - 48; // Subtract the ASCII code for 0
+      char tempAccessLevel = receivedMessage[1] - 48; // Subtract the ASCII code for 0
       if (tempAccessLevel <= accessLevel){
         accessLevel = tempAccessLevel;
       }
