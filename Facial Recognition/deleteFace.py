@@ -20,4 +20,4 @@ def deleteFace(ID):
     print(f"Faces with ID {ID} removed from system")
 
 
-deleteFace(1)
+deleteFace(2)

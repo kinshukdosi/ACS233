@@ -73,7 +73,7 @@ class keypad(tk.Frame):
                 self.entered_pin.pop()
         #
         elif text == 'Face':
-            self.access_level += 1
+            self.key_callback(text)
         elif text == 'Ent':
             if(self.access_level == 0):
                 self.key_callback(''.join(self.entered_pin))
