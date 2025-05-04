@@ -20,7 +20,7 @@ class keypad(tk.Frame):
         self.entered_pin = []
 
         self.access_level = 0
-        self.system_mode = 'D'
+        self.system_mode = 'I'
 
         #calling methods to create window
         self.create_output_window()
