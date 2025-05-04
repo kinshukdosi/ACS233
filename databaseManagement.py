@@ -2,7 +2,7 @@
 import pyodbc
 import os
 import pandas as pd
-
+from datetime import datetime
 # Function to open/create database and ensure the table exists
 # Full path to your MS Access database (.accdb) in r' format
 
@@ -76,6 +76,28 @@ class DatabaseTable:
             print("Read error:", e)
             return pd.DataFrame()
 
+    def delete_old_records(self, date_index):
+        today = datetime.now()
+        month = today.month - 7
+        year = today.year
+
+        if month <= 0:
+            month += 12
+            year -= 1
+
+        cutoff_date = datetime(year, month, today.day)
+
+        self.cur.execute(f"SELECT id, {list(self.fields.keys())[date_index]} FROM {self.table_name}")
+        records = self.cur.fetchall()
+
+        for record in records:
+            date = datetime.strptime(record[1], '%d/%m/%y')
+            if date < cutoff_date:
+                self.cur.execute(f"DELETE FROM {self.table_name} WHERE id = ?", (record[0],))
+                print(f"Deleted record ID {record[0]} dated {record[1]}")
+
+        self.conn.commit()
+
     def close_connection(self):
         self.cur.close()
         self.conn.close()
@@ -87,15 +109,25 @@ if __name__ == "__main__":
     # Full path to your MS Access database (.accdb)
     db_path = r'securityRecords.accdb'
 
-    db_fields = {'[Date]': 'TEXT', '[Time]': 'TEXT', 'Activity': 'TEXT', 'Action': 'TEXT'}
+    db_fields = {'[Date]': 'TEXT', '[Time]': 'TEXT', 'Action': 'TEXT', 'Type': 'TEXT'}
+    face_fields = {'Name': 'TEXT'}
 
     # Open the database
     logTable = DatabaseTable(db_path, 'log', db_fields)
+    facetable = DatabaseTable(db_path, 'faces', face_fields)
+    #facetable.add_record(['Vasee'])
+
+
+    # Add a sample record
+    logTable.add_record(
+        [datetime.now().strftime("%d/%m/%y"), datetime.now().strftime("%H:%M:%S"), 'Access granted', 'Level 2 access'])
 
     print(logTable.read_table())
 
-    # Add a sample record
-    logTable.add_record(['hello', 'hu', 'ds', 'dsds'])
+    logTable.delete_old_records(0)
 
     # Close the connection
     logTable.close_connection()
+
+    print(facetable.read_table())
+    facetable.close_connection()
