@@ -97,27 +97,37 @@ Session::Session(char systemMode){
 }
 
 void Session::run(){
+  // Send data to python
   char tempString[2] = "x";
   if (millis() > lastMessageTime + sendDelay){
       lastMessageTime = millis();
+
+      // Send Access Level
       tempString[0] = accessLevel + 48; // add ASCII code for 0
       SerialWrite('a', tempString);
+
+      // Send System Mode
       tempString[0] = systemMode;
       SerialWrite('m', tempString);
+
+      // Send alarmTriggered
+      if (alarmTriggered){
+        SerialWrite('t', "T");
+      }
+      else{
+        SerialWrite('t', "F");
+      }
   }
 
   // Check day mode sensors //
-  if (systemMode == 'D')
-  {
-    if (checkSensors(daySensors, 6)) // Need to change 5 to 6 to include panic button. Button currently used as PIN code successful
-    {
+  if (systemMode == 'D'){
+    if (checkSensors(daySensors, 6)){
       alarmTriggered = true;
     }
   }
   
   // Check night mode sensors//
-  if (systemMode == 'N')
-  {
+  if (systemMode == 'N'){
     // Night sensors will provide a delay before activating the alarm when in night mode
     if (checkSensors(nightSensors, 6)){
       awaitingPIN = true;
@@ -141,17 +151,6 @@ void Session::run(){
     alarmTriggered = false;
   }
   
-  // Temp check for pin //
-  /*
-  char sensorName[16];
-  // Use button as PIN correct
-    if ((*daySensors[5]).isTriggered()){
-        alarmTriggered = false;
-        pinAttempts = 0;
-        awaitingPIN = false;
-    }
-  */
-  
   // Activate alarm if necessary
   if (alarmTriggered){
       activateAlarm();
@@ -162,17 +161,19 @@ void Session::run(){
 
   // Checks for a new message
   SerialRead();
-  // Handles messages once received
   if(newMessage){
+
     // Switches between Day ('D'), Night ('N') and Idle ('I') modes
     if (receivedMessage[0] == 'm'){
         systemMode = receivedMessage[1];
     }
+
     // Change to access level 2 if facial recognition is successful
     else if (receivedMessage[0] == 'f'){
         accessLevel = 2;
     }
-    // If a pin is received
+
+    // Deal with PIN input
     else if (receivedMessage[0] == 'p')
     {
         bool PINsMatch = true;
@@ -183,7 +184,7 @@ void Session::run(){
           }
         }
 
-        // Put code below in a checkPIN(PINattempt); method
+        // If PIN is correct, log in and reset alarm
         if (PINsMatch){
             accessLevel = 1;
             pinAttempts = 0;
@@ -191,13 +192,23 @@ void Session::run(){
             alarmTriggered = false;
             SerialWrite('p', "s");
         }
+        // If PIN is wrong
         else {
             pinAttempts +=1;
             if (pinAttempts == 3){
                 alarmTriggered = true;
+                SerialWrite('p', "F");
+            } else {
                 SerialWrite('p', "f");
             }
         }
+    }
+    // Changes the access level
+    else if (receivedMessage[0] == 'a'){
+      tempAccessLevel = receivedMessage[1] - 48; // Subtract the ASCII code for 0
+      if (tempAccessLevel <= accessLevel){
+        accessLevel = tempAccessLevel;
+      }
     }
 
     newMessage = false;
