@@ -36,6 +36,7 @@ const byte pinPIR_2 = 51; // Doesn't physically exist
 
 Session::Session(char systemMode){
     this->systemMode = systemMode; // Start in day mode
+    this->accessLevel = 0;
     this->timeDelay = 30000; // 30s to turn off alarm
     this->alarmOffTime = 10000; // 10s limit for the buzzer. 30*60*1,000=1,800,000 for 30 mins in a real life system
     this->timeTriggered = 0; // Default to 0, not used until sensor tripped
@@ -45,6 +46,11 @@ Session::Session(char systemMode){
     // Variables for receiving messages
     this->newMessage = false;
     this->receivedMessage[32];
+
+    // Variables for dealing with PIN
+    this->correctPIN[5] = "1234";
+    this->pinAttempt[5] = "    ";
+    this->pinAttempts = 0;
 
     // Instantiate LEDs
     this->alarmLEDs[0] = new LED(pinLED_1, "REC_LED_1", 500);
@@ -101,8 +107,7 @@ void Session::run(){
   // Use button as PIN correct
     if ((*daySensors[5]).isTriggered()){
         alarmTriggered = false;
-        (*daySensors[5]).getName(sensorName);
-       // Serial.println(sensorName);
+        pinAttempts = 0;
     }
   
   // Activate alarm if necessary
@@ -117,6 +122,35 @@ void Session::run(){
   SerialRead();
   // Handles messages once received
   if(newMessage){
+    // Switches between Day ('D'), Night ('N') and Idle ('I') modes
+    if (receivedMessage[0] == 'm'){
+        systemMode = receivedMessage[1];
+    }
+    // Change to access level 2 if facial recognition is successful
+    else if (receivedMessage[0] == 'f'){
+        accessLevel = 2;
+    }
+    // If a pin is received
+    else if (receivedMessage[0] == 'p')
+    {
+        for (int i=0; i<4; i++){
+          pinAttempt[i] = receivedMessage[i+1];
+        }
+        // Put code below in a checkPIN(PINattempt); method
+        if (pinAttempt == correctPIN){
+            accessLevel = 1;
+            pinAttempts = 0;
+            SerialWrite('p', "s");
+        }
+        else {
+            pinAttempts +=1;
+            if (pinAttempts == 3){
+                alarmTriggered = true;
+                SerialWrite('p', "f");
+            }
+        }
+    }
+
     SerialWrite('M', receivedMessage);
     newMessage = false;
   }

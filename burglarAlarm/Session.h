@@ -11,6 +11,7 @@ using namespace std;
 class Session{
     private:
         char systemMode;
+        int accessLevel;
         int timeDelay;
         int alarmOffTime;
         unsigned long timeTriggered;
@@ -21,6 +22,11 @@ class Session{
         // Variables for receiving messages
         bool newMessage;
         char receivedMessage[32];
+
+        // Variables for checking the PIN
+        char correctPIN[5];
+        char pinAttempt[5];
+        int pinAttempts;
 
         LED* alarmLEDs[5];
         Buzzer* alarmBuzzers[5];
