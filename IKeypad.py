@@ -122,4 +122,4 @@ class keypad(tk.Frame):
         self.output_window.tag_add('highlightline', self.cursor, self.cursor+1.0)
         self.output_window.tag_config('highlightline', background = "white", foreground = 'black')
 
-        self.after(1000, self.update_output_window)
+        self.after(100, self.update_output_window)

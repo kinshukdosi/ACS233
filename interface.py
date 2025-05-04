@@ -12,15 +12,18 @@ def keypad_selection(text):
 
 
 def get_selection_message(selection):
-    if selection.strip()[1] == '1':
-        return "mD"
-    elif selection.strip()[1] == '2':
+    if selection.strip()[0] == '1':
+        if(keypad.system_mode == 'D'):
+            return "mN"
+        else:
+            return "mD"
+    elif selection.strip()[0] == '2':
         return "addF"
-    elif selection.strip()[1] == '3':
+    elif selection.strip()[0] == '3':
         return "delF"
-    elif selection.strip()[1] == '4':
+    elif selection.strip()[0] == '4':
         return "deactSys"
-    elif selection.strip()[1] == '5':
+    elif selection.strip()[0] == '5':
         return "changePin"
     else:
         return selection
@@ -37,14 +40,11 @@ def serial_check_resp(arduino):
         response = raw_response.decode().strip()
         if response:
             print("Response from arduino: " + response)
-            print(type(response))
 
             if response[0] == 'a':
                 keypad.access_level = int(response[1])
-                print(f"current access level: {keypad.access_level}")
             if response[0] == 'm':
                 keypad.system_mode = response[1]
-                print(f"current system mode: {keypad.system_mode}")
             
 
 
