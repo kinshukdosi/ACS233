@@ -1,12 +1,13 @@
-import cv2, face_recognition, pickle, os
+import cv2, face_recognition, pickle, os, sys
 import sqlite3
+
 
 
 cascPathface = os.path.dirname(
  cv2.__file__) + "/data/haarcascade_frontalface_alt2.xml"
 faceCascade = cv2.CascadeClassifier(cascPathface)
 data = pickle.loads(open('face_enc', "rb").read()) # Face encodings of previously stored images of people
-noInput = cv2.imread('noInput.png')
+#noInput = cv2.imread('noInput.png')
 
 
 def startVideo(cameraID):
@@ -23,9 +24,11 @@ def analyseFrame(video):
     ''' Analyses given video for faces, compares with images in 'Images'
     folder and overlays frame with name and box around the detected face'''
     
+    recognised = False
+
     if isinstance(video, cv2.VideoCapture) != True:
         print('Video object is invalid')
-        return noInput
+        return None, False
 
     ret, frame = video.read() # Retrieve single frame from video
     frame = cv2.flip(frame, 1)
@@ -37,9 +40,11 @@ def analyseFrame(video):
                                         minSize=(60, 60), 
                                         # Minimum object size; faces smaller than 60x60 pixels are ignored
                                         flags=cv2.CASCADE_SCALE_IMAGE) 
-    
+    '''
     if type(faces) is tuple: # Returns frame early if no face detected - Saves processing power
         return frame
+    '''
+        
 
     rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB) # Changing color space to rgb
     encodings = face_recognition.face_encodings(rgb) # Returns face encoding for each face in the frame
@@ -76,21 +81,39 @@ def analyseFrame(video):
                 cv2.putText(frame, "UNKNOWN", (x+10, y-10), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
         
         for name in names:
-            if name == "Unknown": # If person is not recognised
-                alert() # Alert function will go here
-                
-    return frame # Returns the frame with analysis complete and any necessary boxes/text written
+            if name != "Unknown": # If person is not recognised
+                recognised = True # Alert function will go here
+            else:
+                recognised = False 
+    return frame, recognised # Returns the frame with analysis complete and any necessary boxes/text written
 
 def alert():
-    print("Alert!!!!") 
+    print("Your face has been recognised!") 
     
 
 def start(cameraID):
+    recognised = False
     video = startVideo(cameraID)
+
+    if not video:
+        print("Error: No valid camera")
+        return False
     while True:
-        frame = analyseFrame(video=video)
+        analysis = analyseFrame(video=video)
+        
+        if analysis is None:
+            continue
+            
+        frame, recognised = analysis
+        
         cv2.imshow("Frame", frame)
-        if cv2.waitKey(1) & 0xFF == ord('q'):
+
+        if recognised:
             break
 
-start(0)
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+    
+    video.release()
+    cv2.destroyAllWindows()
+    return recognised
