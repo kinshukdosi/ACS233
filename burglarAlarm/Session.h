@@ -25,13 +25,14 @@ class Session{
         unsigned long timeTriggered;
         
 
-        
         // Variables for receiving messages
         bool newMessage;
         char receivedMessage[32];
+        unsigned long sendDelay;
+        unsigned long lastMessageTime;
 
         // Variables for checking the PIN
-        char correctPIN[5];
+        char correctPIN[4];
         char pinAttempt[5];
         int pinAttempts;
 
