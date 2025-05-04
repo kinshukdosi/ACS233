@@ -35,16 +35,35 @@ const byte pinPIR_2 = 51; // Doesn't physically exist
 
 
 Session::Session(char systemMode){
+    // System state variables
     this->systemMode = systemMode; // Start in day mode
-    this->timeDelay = 30000; // 30s to turn off alarm
-    this->alarmOffTime = 10000; // 10s limit for the buzzer. 30*60*1,000=1,800,000 for 30 mins in a real life system
-    this->timeTriggered = 0; // Default to 0, not used until sensor tripped
+    this->accessLevel = 0;
+
+    // Alarm variables
     this->alarmTriggered = false;
     this->prevAlarmTriggered = false;
+
+    // Delay before triggering alarm on entering building
+    this->timeDelay = 5000; // (5s for testing) 20s to turn off alarm
+    this->timeEntered = 0;
+    this->awaitingPIN = false;
+    this->prevAwaitingPIN = false;
+
+    // Buzzer cut off variables
+    this->alarmOffTime = 10000; // 10s limit for the buzzer. 30*60*1,000=1,800,000 for 30 mins in a real life system
+    this->timeTriggered = 0; // Default to 0, not used until sensor tripped
     
     // Variables for receiving messages
     this->newMessage = false;
     this->receivedMessage[32];
+    this->sendDelay = 500;
+    this->lastMessageTime = 0;
+
+    // Variables for dealing with PIN
+    const char tempPIN[4] = {'1', '2', '3', '4'};
+    memcpy(this->correctPIN, tempPIN, 4);
+    this->pinAttempt[5] = "    ";
+    this->pinAttempts = 0;
 
     // Instantiate LEDs
     this->alarmLEDs[0] = new LED(pinLED_1, "REC_LED_1", 500);
@@ -78,10 +97,19 @@ Session::Session(char systemMode){
 }
 
 void Session::run(){
+  char tempString[2] = "x";
+  if (millis() > lastMessageTime + sendDelay){
+      lastMessageTime = millis();
+      tempString[0] = accessLevel + 48; // add ASCII code for 0
+      SerialWrite('a', tempString);
+      tempString[0] = systemMode;
+      SerialWrite('m', tempString);
+  }
+
   // Check day mode sensors //
-  if (systemMode == 'D' or systemMode == 'N')
+  if (systemMode == 'D')
   {
-    if (checkSensors(daySensors, 5)) // Need to change 5 to 6 to include panic button. Button currently used as PIN code successful
+    if (checkSensors(daySensors, 6)) // Need to change 5 to 6 to include panic button. Button currently used as PIN code successful
     {
       alarmTriggered = true;
     }
@@ -90,20 +118,39 @@ void Session::run(){
   // Check night mode sensors//
   if (systemMode == 'N')
   {
-    if (checkSensors(nightSensors, 6))
-    {
+    // Night sensors will provide a delay before activating the alarm when in night mode
+    if (checkSensors(nightSensors, 6)){
+      awaitingPIN = true;
+    }
+
+    if (!prevAwaitingPIN && awaitingPIN){
+      timeEntered = millis();
+    }
+    prevAwaitingPIN = awaitingPIN;
+
+    if (awaitingPIN && millis() > timeEntered + timeDelay){
+        alarmTriggered = true;
+    }
+
+    if (checkSensors(daySensors, 6)){ // Need to change 5 to 6 to include panic button. Button currently used as PIN code successful
       alarmTriggered = true;
     }
   }
+
+  if (systemMode == 'I'){
+    alarmTriggered = false;
+  }
   
-  // Check for pin //
+  // Temp check for pin //
+  /*
   char sensorName[16];
   // Use button as PIN correct
     if ((*daySensors[5]).isTriggered()){
         alarmTriggered = false;
-        (*daySensors[5]).getName(sensorName);
-       // Serial.println(sensorName);
+        pinAttempts = 0;
+        awaitingPIN = false;
     }
+  */
   
   // Activate alarm if necessary
   if (alarmTriggered){
@@ -117,7 +164,42 @@ void Session::run(){
   SerialRead();
   // Handles messages once received
   if(newMessage){
-    SerialWrite('M', receivedMessage);
+    // Switches between Day ('D'), Night ('N') and Idle ('I') modes
+    if (receivedMessage[0] == 'm'){
+        systemMode = receivedMessage[1];
+    }
+    // Change to access level 2 if facial recognition is successful
+    else if (receivedMessage[0] == 'f'){
+        accessLevel = 2;
+    }
+    // If a pin is received
+    else if (receivedMessage[0] == 'p')
+    {
+        bool PINsMatch = true;
+        for (int i=0; i<4; i++){
+          if (correctPIN[i] != receivedMessage[i+1]){
+            PINsMatch = false;
+            SerialWrite(receivedMessage[i+1], correctPIN);
+          }
+        }
+
+        // Put code below in a checkPIN(PINattempt); method
+        if (PINsMatch){
+            accessLevel = 1;
+            pinAttempts = 0;
+            awaitingPIN = false;
+            alarmTriggered = false;
+            SerialWrite('p', "s");
+        }
+        else {
+            pinAttempts +=1;
+            if (pinAttempts == 3){
+                alarmTriggered = true;
+                SerialWrite('p', "f");
+            }
+        }
+    }
+
     newMessage = false;
   }
 }
@@ -128,6 +210,7 @@ void Session::SerialWrite(char prefix, char string[]){
     for (int i=0; i<16; i++){
       message[i+1] = string[i];
     }
+    message[16] = '\0';
 
     Serial.println(message);
 }
@@ -177,6 +260,9 @@ bool Session::checkSensors(Sensor* sensorArray[], int arrLen){
 }
 
 void Session::activateAlarm(){
+  // Log out of GUI
+  accessLevel = 0;
+
   // Activate LEDs
   for (int i=0; i<3; i++){ // Change 3 to 5 when ready to use buzzer
     (*alarmLEDs[i]).on();

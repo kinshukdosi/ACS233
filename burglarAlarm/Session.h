@@ -11,16 +11,30 @@ using namespace std;
 class Session{
     private:
         char systemMode;
-        int timeDelay;
-        int alarmOffTime;
-        unsigned long timeTriggered;
+        int accessLevel;
+
         bool alarmTriggered;
         bool prevAlarmTriggered; // Used to detect change in state
 
+        int timeDelay;
+        unsigned long timeEntered;
+        bool awaitingPIN;
+        bool prevAwaitingPIN;
+
+        int alarmOffTime;
+        unsigned long timeTriggered;
         
+
         // Variables for receiving messages
         bool newMessage;
         char receivedMessage[32];
+        unsigned long sendDelay;
+        unsigned long lastMessageTime;
+
+        // Variables for checking the PIN
+        char correctPIN[4];
+        char pinAttempt[5];
+        int pinAttempts;
 
         LED* alarmLEDs[5];
         Buzzer* alarmBuzzers[5];
