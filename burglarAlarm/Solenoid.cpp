@@ -34,9 +34,3 @@ Solenoid::off(){
 Solenoid::on(){
     digitalWrite(pin, LOW);
 }
-
-/*
-void Solenoid::toggleState(){
-
-}
-*/

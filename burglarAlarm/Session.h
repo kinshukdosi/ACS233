@@ -3,6 +3,7 @@
 #include "Actuator.h"
 #include "LED.h"
 #include "Buzzer.h"
+#include "Solenoid.h"
 using namespace std;
 
 #ifndef SESSION_H
@@ -20,6 +21,9 @@ class Session{
         unsigned long timeEntered;
         bool awaitingPIN;
         bool prevAwaitingPIN;
+
+        unsigned long timeExited;
+        bool awaitingExit;
 
         int alarmOffTime;
         unsigned long timeTriggered;
@@ -40,6 +44,7 @@ class Session{
         Buzzer* alarmBuzzers[5];
         Sensor* daySensors[6];
         Sensor* nightSensors[6];
+        Solenoid* doorLock;
 
         void SerialWrite(char prefix, char message[]);
         void SerialRead();
@@ -48,10 +53,10 @@ class Session{
         void activateAlarm();
         void deactivateAlarm();
 
+        boolean checkPin(char correctPIN[], char enteredPIN[]);
+
     public:
         Session(char systemMode);
-
-        boolean checkPin();
         void run();
 };
 
