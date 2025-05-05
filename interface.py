@@ -71,8 +71,9 @@ def get_selection_message(selection):
 def get_face_del():
     try:
         names = [name + '\n' for name in os.listdir("Images") if os.path.isdir(os.path.join("Images", name))]
+        names.append("Exit")
     except FileNotFoundError:
-        names = ["No image files found"]
+        names = ["No image files found", "Exit"]
     keypad.selector_mode = True
     keypad.text_output = names
 
@@ -85,67 +86,68 @@ def serial_write(arduino, message):
 
 
 def serial_check_resp(arduino):
-    if arduino.in_waiting > 0:
-        raw_response = arduino.read_until()
-        response = raw_response.decode().strip()
+    if(arduino != None):
+        if arduino.in_waiting > 0:
+            raw_response = arduino.read_until()
+            response = raw_response.decode().strip()
 
-        # Response from the serial communication
-        if response:
-            print("Response from arduino: " + response)
+            # Response from the serial communication
+            if response:
+                print("Response from arduino: " + response)
 
-            # Current access level
-            if response[0] == 'a':
-                keypad.access_level = int(response[1])
+                # Current access level
+                if response[0] == 'a':
+                    keypad.access_level = int(response[1])
 
-            # Current Mode
-            elif response[0] == 'm':
-                if keypad.system_mode != response[1]:
-                    match response[1]:
-                        case 'I':
-                            log_str = 'Changed to Idle'
-                        case 'N':
-                            log_str = 'Changed to Night mode'
-                        case _:
-                            log_str = 'Changed to Day mode'
-                    logTable.add_record(
-                        [datetime.now().strftime("%d/%m/%y"), datetime.now().strftime("%H:%M:%S"), 'Changed mode',
-                         log_str])
-                keypad.system_mode = response[1]
+                # Current Mode
+                elif response[0] == 'm':
+                    if keypad.system_mode != response[1]:
+                        match response[1]:
+                            case 'I':
+                                log_str = 'Changed to Idle'
+                            case 'N':
+                                log_str = 'Changed to Night mode'
+                            case _:
+                                log_str = 'Changed to Day mode'
+                        logTable.add_record(
+                            [datetime.now().strftime("%d/%m/%y"), datetime.now().strftime("%H:%M:%S"), 'Changed mode',
+                            log_str])
+                    keypad.system_mode = response[1]
 
-            # Current Alarm state
-            elif response[0] == 't':
-                if keypad.alarm_state != response[1] and response[1] == 'F':
-                    logTable.add_record(
-                        [datetime.now().strftime("%d/%m/%y"), datetime.now().strftime("%H:%M:%S"), 'Deactivated Alarm',
-                         '-'])
-                keypad.alarm_state = response[1]
+                # Current Alarm state
+                elif response[0] == 't':
+                    if keypad.alarm_state != response[1] and response[1] == 'F':
+                        logTable.add_record(
+                            [datetime.now().strftime("%d/%m/%y"), datetime.now().strftime("%H:%M:%S"), 'Deactivated Alarm',
+                            '-'])
+                    keypad.alarm_state = response[1]
 
-            # Sensor triggered
-            elif response[0] == 's':
-                logTable.add_record(
-                    [datetime.now().strftime("%d/%m/%y"), datetime.now().strftime("%H:%M:%S"), 'Alarm Activated',
-                     response[1:]])
-
-            # Pin check result
-            elif response[0] == 'p':
-                # Pin is wrong 3 times
-                if response[1] == 'F':
+                # Sensor triggered
+                elif response[0] == 's':
                     logTable.add_record(
                         [datetime.now().strftime("%d/%m/%y"), datetime.now().strftime("%H:%M:%S"), 'Alarm Activated',
-                         'Pin entered wrong 3 times'])
-                # Pin is correct
-                elif response[1] == 's':
-                    logTable.add_record(
-                        [datetime.now().strftime("%d/%m/%y"), datetime.now().strftime("%H:%M:%S"),
-                         'Access Level 1 granted', '-'])
-                
-                # Clears entered pin after attempt
-                if response[1] == 'f' or response[1] == 'F':
-                    keypad.entered_pin = []
+                        response[1:]])
 
-        else:
-            print("empty response")
+                # Pin check result
+                elif response[0] == 'p':
+                    # Pin is wrong 3 times
+                    if response[1] == 'F':
+                        logTable.add_record(
+                            [datetime.now().strftime("%d/%m/%y"), datetime.now().strftime("%H:%M:%S"), 'Alarm Activated',
+                            'Pin entered wrong 3 times'])
+                    # Pin is correct
+                    elif response[1] == 's':
+                        logTable.add_record(
+                            [datetime.now().strftime("%d/%m/%y"), datetime.now().strftime("%H:%M:%S"),
+                            'Access Level 1 granted', '-'])
+                    
+                    # Clears entered pin after attempt
+                    if response[1] == 'f' or response[1] == 'F':
+                        keypad.entered_pin = []
 
+            else:
+                print("empty response")
+    
 
     
     root.after(50, lambda: serial_check_resp(arduino))

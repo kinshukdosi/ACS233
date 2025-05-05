@@ -1,10 +1,5 @@
-import cv2, face_recognition, pickle, os, sys
+import cv2, face_recognition, pickle, os
 import sqlite3
-
-
-
-
-
 
 def startVideo(cameraID):
     ''' Checks video is valid, requires a cameraID argument.
@@ -19,72 +14,54 @@ def startVideo(cameraID):
 def analyseFrame(video, data, faceCascade):
     ''' Analyses given video for faces, compares with images in 'Images'
     folder and overlays frame with name and box around the detected face'''
-    
+
     recognised = False
-
-    if isinstance(video, cv2.VideoCapture) != True:
+    
+    if not isinstance(video, cv2.VideoCapture):
         print('Video object is invalid')
-        return None, False
+        return None 
 
-    ret, frame = video.read() # Retrieve single frame from video
+    ret, frame = video.read()
+    if not ret or frame is None:
+        return None
+
     frame = cv2.flip(frame, 1)
-    
-    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY) # Converts frame to grayscale, this improves performance
-    faces = faceCascade.detectMultiScale(gray, 
-                                        scaleFactor=1.1,
-                                        minNeighbors=5,
-                                        minSize=(60, 60), 
-                                        # Minimum object size; faces smaller than 60x60 pixels are ignored
-                                        flags=cv2.CASCADE_SCALE_IMAGE) 
-    '''
-    if type(faces) is tuple: # Returns frame early if no face detected - Saves processing power
-        return frame
-    '''
-        
+    small_frame = cv2.resize(frame, (0, 0), fx=0.25, fy=0.25)  # Speed up encoding by shrinking image
+    rgb_small = cv2.cvtColor(small_frame, cv2.COLOR_BGR2RGB)
 
-    rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB) # Changing color space to rgb
-    encodings = face_recognition.face_encodings(rgb) # Returns face encoding for each face in the frame
-    
-    names = [] # List to hold the names of the detected person(s) in the frame
-    for encoding in encodings: # Looping over each encoding (face)
-    
-        matches = face_recognition.compare_faces(data["encodings"], # Comparing face in frame to those previously stored
-        encoding)
-        
-        name = "Unknown" # Default name is unknown - will change if person is recognised
+    face_locations = face_recognition.face_locations(rgb_small, model='hog')  # faster model
+    face_encodings = face_recognition.face_encodings(rgb_small, face_locations)
 
-        if True in matches: 
-            matchedID = [i for (i, b) in enumerate(matches) if b] # Retrieving indexes of matching images from the 'Images' folder
-            counts = {} # Used to store how many images match the face in the current frame
-            
-            for i in matchedID:
-                name = data["names"][i]
-                counts[name] = counts.get(name, 0) + 1
-            name = max(counts, key=counts.get)
-            
-        names.append(name) # The person who matches strongest with the person in the frame is stored
+    names = []
 
-        
-        for ((x, y, w, h), name) in zip(faces, names):
-            if name == "Unknown":
-                cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 0, 255), 2) # Placing red box around face if unrecognised
-            else:
-                cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2) # Placing green box around the face if recognised
-            
-            if name != "Unknown":
-                cv2.putText(frame, f"Employee ID: {name}", (x+10, y-10), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
-            else:
-                cv2.putText(frame, "UNKNOWN", (x+10, y-10), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
-        
-        for name in names:
-            if name != "Unknown": # If person is not recognised
-                recognised = True # Alert function will go here
-            else:
-                recognised = False 
-    return frame, recognised # Returns the frame with analysis complete and any necessary boxes/text written
+    for encoding in face_encodings:
+        matches = face_recognition.compare_faces(data["encodings"], encoding)
+        name = "Unknown"
+
+        if True in matches:
+            matched_ids = [data["names"][i] for i, matched in enumerate(matches) if matched]
+            name = max(set(matched_ids), key=matched_ids.count)
+
+        names.append(name)
+
+    # Scale back up face locations since we detected on the smaller image
+    for (top, right, bottom, left), name in zip(face_locations, names):
+        # Scale to original frame size
+        top, right, bottom, left = [coord * 4 for coord in (top, right, bottom, left)]
+
+        color = (0, 255, 0) if name != "Unknown" else (0, 0, 255)
+        label = f"Employee ID: {name}" if name != "Unknown" else "UNKNOWN"
+
+        cv2.rectangle(frame, (left, top), (right, bottom), color, 2)
+        cv2.putText(frame, label, (left + 10, top - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.8, color, 2)
+
+        if name != "Unknown":
+            recognised = True  # Still call alert if unknown
+
+    return frame, recognised
 
 def alert():
-    print("Your face has been recognised!") 
+    print("Alert!!!!") 
     
 
 def start(cameraID):
@@ -96,10 +73,6 @@ def start(cameraID):
 
     recognised = False
     video = startVideo(cameraID)
-
-    if not video:
-        print("Error: No valid camera")
-        return False
     while True:
         analysis = analyseFrame(video, data, faceCascade)
         
