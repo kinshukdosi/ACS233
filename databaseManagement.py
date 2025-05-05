@@ -83,6 +83,10 @@ class DatabaseTable:
         except Exception as e:
             print("Delete old records error:", e)
 
+    def export_to_csv(self):
+        data = pd.read_sql_query(f"SELECT * FROM {self.table_name}", self.conn)
+        data.to_csv(self.table_name + ".csv", index=False)
+
     def close_connection(self):
         self.cur.close()
         self.conn.close()
@@ -107,7 +111,7 @@ if __name__ == "__main__":
     logTable.add_record(
         [datetime.now().strftime("%d/%m/%y"), datetime.now().strftime("%H:%M:%S"), 'Access granted', 'Level 2 access'])
 
-    print(logTable.read_table())
+    logTable.export_to_csv()
 
     logTable.delete_old_records(0)
 
