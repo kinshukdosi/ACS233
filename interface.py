@@ -9,9 +9,6 @@ from databaseManagement import DatabaseTable
 from datetime import datetime
 import facialRecognition, addFace, deleteFace
 import updateFaces
-
-
-
 import serial
 
 def keypad_selection(text):
@@ -33,7 +30,8 @@ def keypad_selection(text):
             serial_write(arduino, 'a0')
             
         elif text.strip()[0] == 'D':
-            id = text.strip()[1:]
+            name = text.strip()[1:]
+            id = deleteFace.get_face_ID(name)
             deleteFace.deleteFace(id)
             name = deleteFace.get_face_name(id)
             updateFaces.updateFaces()
@@ -50,7 +48,9 @@ def keypad_selection(text):
             
         elif text.strip()[0] == '3':
             get_face_del()
-            
+        
+        elif text.strip()[0] == '6':
+            logTable.export_to_csv()
         else:
             serial_write(arduino, get_selection_message(text))
             print("Unknown selection" + text)
@@ -71,9 +71,8 @@ def get_selection_message(selection):
 
 def get_face_del():
     try:
-        names = [name + '\n' for name in os.listdir("Images") if os.path.isdir(os.path.join("Images", name))]
-        names.append("Exit\n")
-        names.insert(0, "Select a face to be deleted\n")
+        names = [name + '\n' for name in deleteFace.get_all_names()]
+        names.insert(0, "Select a face to be deleted (Logout to exit this screen)\n")
     except FileNotFoundError:
         names = ["No image files found\n", "Exit\n"]
     keypad.selector_mode = True
@@ -127,6 +126,7 @@ def serial_check_resp(arduino):
 
                 # Sensor triggered
                 elif response[0] == 's':
+                    keypad.sector_triggered = response[1:]
                     logTable.add_record(
                         [datetime.now().strftime("%d/%m/%y"), datetime.now().strftime("%H:%M:%S"), 'Alarm Activated',
                         response[1:]])
@@ -170,6 +170,10 @@ def shutdown_procedure():
     if arduino:
         arduino.close()
 
+def clean_old_records():
+    logTable.delete_old_records(1)
+
+    root.after((86.4*10^6), clean_old_records())
 
 if __name__ == "__main__":
 
@@ -188,6 +192,7 @@ if __name__ == "__main__":
     root = tk.Tk()
     keypad = IKeypad.keypad(root, key_callback=keypad_selection)
     keypad.pack(padx=20, pady=20)
+    clean_old_records()
     serial_check_resp(arduino)
     print("Response checked")
     root.protocol("WM_DELETE_WINDOW", shutdown_procedure)

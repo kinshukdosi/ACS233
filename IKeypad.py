@@ -25,7 +25,7 @@ class keypad(tk.Frame):
         self.access_level = 0
         self.system_mode = 'I'
         self.alarm_state = 'F'
-        self.sector_triggered = ''
+        self.sector_triggered = 'No sensor triggered'
 
         #calling methods to create window
         self.create_output_window()
@@ -100,6 +100,9 @@ class keypad(tk.Frame):
     def create_output_window(self):
         self.output_window = tk.Text(self, height=10, width = 50, bg='black', fg='white', relief = 'raised')
         self.output_window.grid(row = 0, column =0, rowspan=4)
+        self.sensor_triggered_window = tk.Text(self, height=1, width=50, bg='black', fg='white', relief = 'raised')
+        self.sensor_triggered_window.grid(row = 11, column = 0, rowspan = 4)
+        
 
     #updates output window by clearing window then reprinting the text_output variable
     #also adds cursor when in menu
@@ -117,9 +120,9 @@ class keypad(tk.Frame):
                     self.text_output = ['Level 1 accessed\n', '1.Switch to day mode\n']
             elif(self.access_level == 2):
                 if(self.system_mode == 'D'):
-                    self.text_output =['Level 2 accessed\n', '1.Switch to night mode\n', '2.Add face\n', '3.Delete face\n', '4.Deactivate system\n', '5.change pin\n']
+                    self.text_output =['Level 2 accessed\n', '1.Switch to night mode\n', '2.Add face\n', '3.Delete face\n', '4.Deactivate system\n', '5.change pin\n', '6.Export log to csv']
                 else:
-                    self.text_output =['Level 2 accessed\n', '1.Switch to day mode\n', '2.Add face\n', '3.Delete face\n', '4.Deactivate system\n', '5.change pin\n']
+                    self.text_output =['Level 2 accessed\n', '1.Switch to day mode\n', '2.Add face\n', '3.Delete face\n', '4.Deactivate system\n', '5.change pin\n', '6.Export log to csv']
         
         if(temp_text_output != self.text_output):
             self.cursor = 2.0
@@ -139,5 +142,31 @@ class keypad(tk.Frame):
             self.output_window.tag_add('highlightline', f"{int(self.cursor)}.0", f"{int(self.cursor+1.0)}.0")
         self.output_window.tag_config('highlightline', background = "white", foreground = 'black')
 
-
+        self.sensor_triggered_window.delete('1.0', tk.END)
+        self.sensor_triggered_window.insert(tk.END, decode_sensor(self.sector_triggered))
         self.after(10, self.update_output_window)
+
+
+    def decode_sensor(code):
+        output = ""
+        if(code[:3] == "REC"):
+            output = "Reception "
+        elif(code[:3] == "GAL"):
+            output = "Gallery "
+        
+        if(code[3:6] == "LED"):
+            return ""
+        elif(code[3:6] == "CAS"):
+            output = output + "case "
+        elif(code[3:6] == "BUT"):
+            output = output + "panic button"
+        elif(code[3:6] == "PAI"):
+            output = output + "painting "
+        elif(code[3:6] == "DOO"):
+            output = output + "door "
+        elif(code[3:6] == "WIN"):
+            output = output + "window "
+        elif(code[3:6] == "PIR"):
+            output = output + "motion sensor "
+
+        output = output + code[:-1]

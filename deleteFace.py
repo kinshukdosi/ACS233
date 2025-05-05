@@ -28,3 +28,23 @@ def get_face_name(ID):
     conn.close()
     return name
 
+def get_face_ID(name):
+    conn = sqlite3.connect('people.db')
+    cursor = conn.cursor()
+    cursor.execute('SELECT ID FROM people WHERE name = ?', (name,))
+    ID = cursor.fetchone()
+    conn.close()
+    return ID
+
+def get_all_names():
+    conn = sqlite3.connect('people.db')
+    cursor = conn.cursor()
+    cursor.execute('SELECT name FROM people')
+    fetched_names = cursor.fetchall()
+    conn.close()
+    names = []
+
+    for item in fetched_names:
+        names.append(item[0])
+
+    return names

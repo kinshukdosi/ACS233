@@ -59,7 +59,7 @@ def analyseFrame(video, data, faceCascade):
         if name != "Unknown":
             recognised = True  # Still call alert if unknown
 
-    return frame, recognised
+    return frame, recognised, names
 
 def alert():
     print("Alert!!!!") 
@@ -81,7 +81,8 @@ def start(cameraID):
         if analysis is None:
             continue
             
-        frame, recognised = analysis
+        frame, recognised, names = analysis
+        print(names)
         
         cv2.imshow("Frame", frame)
 

@@ -1,6 +1,7 @@
 import cv2, os, datetime
 from updateFaces import updateFaces
 import sqlite3
+import pandas as pd
 
 def startVideo(cameraID):
     ''' Checks video is valid, requires a cameraID argument.
@@ -60,5 +61,9 @@ def startAddFace(cameraID, name):
     video.release()
     cv2.destroyAllWindows()
 
-
-
+'''
+conn = sqlite3.connect('people.db')
+cursor = conn.cursor()
+print(pd.read_sql_query(f"SELECT * FROM people", conn))
+conn.close()
+'''
