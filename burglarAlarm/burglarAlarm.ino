@@ -1,7 +1,7 @@
 // INCLUDE CLASSES //
 #include "Session.h"
 
-Session MainSession('D');
+Session MainSession('N');
 
 // SET UP //
 void setup() {

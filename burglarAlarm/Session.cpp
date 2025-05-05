@@ -8,11 +8,11 @@ const byte pinLED_4 = 41;  // Digital
 const byte pinLED_5 = 39;  // Doesn't have a physical LED
 
 // Buzzer Pins //
-const byte pinBuzzer_1 = 3;  // Digital
-const byte pinBuzzer_2 = 22;  // Doesn't have a physical Buzzer
-const byte pinBuzzer_3 = 24;  // Doesn't have a physical Buzzer
-const byte pinBuzzer_4 = 26;  // Doesn't have a physical Buzzer
-const byte pinBuzzer_5 = 28;  // Doesn't have a physical Buzzer
+const byte pinBuzzer_1 = 22;  // Digital
+const byte pinBuzzer_2 = 24;  // Doesn't have a physical Buzzer
+const byte pinBuzzer_3 = 26;  // Doesn't have a physical Buzzer
+const byte pinBuzzer_4 = 28;  // Doesn't have a physical Buzzer
+const byte pinBuzzer_5 = 30;  // Doesn't have a physical Buzzer
 
 // Solenoid Pin //
 const byte pinSolenoid_1 = 2; // Digital
@@ -44,19 +44,19 @@ Session::Session(char systemMode){
     this->prevAlarmTriggered = false;
 
     // Delay before triggering alarm on entering building
-    this->timeDelay = 5000; // (5s for testing) 20s to turn off alarm
+    this->timeDelay = 5000; // (5s for testing) 60s to turn off alarm
     this->timeEntered = 0;
     this->awaitingPIN = false;
     this->prevAwaitingPIN = false;
 
     // Buzzer cut off variables
-    this->alarmOffTime = 10000; // 10s limit for the buzzer. 30*60*1,000=1,800,000 for 30 mins in a real life system
+    this->alarmOffTime = 4000; // 4s limit for the buzzer. 30*60*1,000=1,800,000 for 30 mins in a real life system
     this->timeTriggered = 0; // Default to 0, not used until sensor tripped
     
     // Variables for receiving messages
     this->newMessage = false;
     this->receivedMessage[32];
-    this->sendDelay = 500;
+    this->sendDelay = 80;
     this->lastMessageTime = 0;
 
     // Variables for dealing with PIN
@@ -64,6 +64,9 @@ Session::Session(char systemMode){
     memcpy(this->correctPIN, tempPIN, 4);
     this->pinAttempt[5] = "    ";
     this->pinAttempts = 0;
+
+    // Instantiate Solenoid
+    this->doorLock = new Solenoid(pinSolenoid_1, "REC_SOL_1");
 
     // Instantiate LEDs
     this->alarmLEDs[0] = new LED(pinLED_1, "REC_LED_1", 500);
@@ -81,7 +84,7 @@ Session::Session(char systemMode){
 
     // Instantiate Day Sensors
     this->daySensors[0] = new Sensor(pinMagnetic_1, "GAL_CAS_1", true); 
-    this->daySensors[1] = new Sensor(pinMagnetic_2, "GAL_CAS_3", true); // Doesn't exist physically
+    this->daySensors[1] = new Sensor(pinMagnetic_2, "GAL_CAS_2", true); // Doesn't exist physically
     this->daySensors[2] = new Sensor(pinMagnetic_3, "GAL_PAI_1", true);
     this->daySensors[3] = new Sensor(pinMagnetic_4, "GAL_PAI_2", true);
     this->daySensors[4] = new Sensor(pinMagnetic_5, "GAL_PAI_3", true);
@@ -93,7 +96,7 @@ Session::Session(char systemMode){
     this->nightSensors[2] = new Sensor(pinMagnetic_8, "GAL_WIN_1", true);
     this->nightSensors[3] = new Sensor(pinMagnetic_9, "GAL_WIN_2", true);
     this->nightSensors[4] = new Sensor(pinPIR_1, "REC_PIR_1", false);
-    this->nightSensors[5] = new Sensor(pinPIR_2, "REC_PIR_2", false);
+    this->nightSensors[5] = new Sensor(pinPIR_2, "GAL_PIR_1", false);
 }
 
 boolean Session::checkPin(char correctPIN[], char enteredPIN[]){
@@ -132,6 +135,7 @@ void Session::run(){
 
   // Check day mode sensors //
   if (systemMode == 'D'){
+    (*doorLock).off();
     if (checkSensors(daySensors, 6)){
       alarmTriggered = true;
     }
@@ -139,6 +143,7 @@ void Session::run(){
   
   // Check night mode sensors//
   if (systemMode == 'N'){
+    (*doorLock).on();
     // Night sensors will provide a delay before activating the alarm when in night mode
     if (checkSensors(nightSensors, 6)){
       awaitingPIN = true;
@@ -282,7 +287,7 @@ void Session::activateAlarm(){
   accessLevel = 0;
 
   // Activate LEDs
-  for (int i=0; i<3; i++){ // Change 3 to 5 when ready to use buzzer
+  for (int i=0; i<5; i++){ // Change 3 to 5 when ready to use buzzer
     (*alarmLEDs[i]).on();
   }
 
@@ -292,15 +297,13 @@ void Session::activateAlarm(){
   }
 
   if (millis() < timeTriggered + alarmOffTime){
-    for (int i=0; i<1; i++){ // change 1 to 5 when ready to use buzzer
-      (*alarmLEDs[3]).on(); // Green LED instead of buzzer
-      // (*alarmBuzzers[i]).on();
+    for (int i=0; i<5; i++){ // change 1 to 5 when ready to use buzzer
+      (*alarmBuzzers[i]).on();
     }
   }
   else {
-    for (int i=0; i<1; i++){ // change 1 to 5 when ready to use buzzer
-      (*alarmLEDs[3]).off(); // Green LED instead of buzzer
-      // (*alarmBuzzers[i]).off();
+    for (int i=0; i<5; i++){ // change 1 to 5 when ready to use buzzer
+      (*alarmBuzzers[i]).off();
     }
   }
   prevAlarmTriggered = true;
