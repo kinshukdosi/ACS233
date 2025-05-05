@@ -50,6 +50,8 @@ class Session{
 
     public:
         Session(char systemMode);
+
+        boolean checkPin();
         void run();
 };
 
