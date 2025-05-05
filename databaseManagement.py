@@ -85,3 +85,11 @@ class DatabaseTable:
     def close_connection(self):
         self.cur.close()  # Close the cursor
         self.conn.close()  # Close the connection to the database
+
+
+if __name__ == '__main__':
+    db_fields = {'[Date]': 'TEXT', '[Time]': 'TEXT', 'Action': 'TEXT', 'Type': 'TEXT'}
+    logTable = DatabaseTable(r'securityRecords.db', 'log', db_fields)
+
+    logTable.add_record(['08/12/23', datetime.now().strftime("%H:%M:%S"), 'TEST TO BE DELETED', 'OLD DATE RECORD'])
+    logTable.export_to_csv()
