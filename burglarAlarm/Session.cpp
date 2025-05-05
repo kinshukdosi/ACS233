@@ -44,7 +44,7 @@ Session::Session(char systemMode){
   this->prevAlarmTriggered = false;
 
   // Delay before triggering alarm on entering building
-  this->timeDelay = 5000; // (5s for testing) 60s to turn off alarm
+  this->timeDelay = 10000; // (10s for testing) 60s to turn off alarm
   this->timeEntered = 0;
   this->awaitingPIN = false;
   this->prevAwaitingPIN = false;
@@ -54,7 +54,7 @@ Session::Session(char systemMode){
   this->awaitingExit = false;
 
   // Buzzer cut off variables //
-  this->alarmOffTime = 4000; // 4s limit for the buzzer. 30*60*1,000=1,800,000 for 30 mins in a real life system
+  this->alarmOffTime = 5000; // 5s limit for the buzzer. 20*60*1,000=1,200,000 for 20 mins in a real life system
   this->timeTriggered = 0; // Default to 0, not used until sensor tripped
   
   // Variables for receiving messages //
