@@ -8,6 +8,7 @@ import tkinter as tk
 from databaseManagement import DatabaseTable
 from datetime import datetime
 import facialRecognition, addFace, deleteFace
+import updateFaces
 
 
 
@@ -35,6 +36,7 @@ def keypad_selection(text):
             id = text.strip()[1:]
             deleteFace.deleteFace(id)
             name = deleteFace.get_face_name(id)
+            updateFaces.updateFaces()
             logTable.add_record(
                 [datetime.now().strftime("%d/%m/%y"), datetime.now().strftime("%H:%M:%S"), 'Face Deleted', name])
             keypad.selector_mode = False
@@ -42,6 +44,7 @@ def keypad_selection(text):
         elif text.strip()[0] == '2':
             name = 'Placeholder'
             addFace.startAddFace(0, name)
+            updateFaces.updateFaces()
             logTable.add_record(
                 [datetime.now().strftime("%d/%m/%y"), datetime.now().strftime("%H:%M:%S"), 'Face Added', name])
             
@@ -145,7 +148,7 @@ def serial_check_resp(arduino):
 
 
     
-    root.after(100, lambda: serial_check_resp(arduino))
+    root.after(50, lambda: serial_check_resp(arduino))
 
 def connect_arduino():
     print("Connecting to arduino")

@@ -3,11 +3,7 @@ import sqlite3
 
 
 
-cascPathface = os.path.dirname(
- cv2.__file__) + "/data/haarcascade_frontalface_alt2.xml"
-faceCascade = cv2.CascadeClassifier(cascPathface)
-data = pickle.loads(open('face_enc', "rb").read()) # Face encodings of previously stored images of people
-#noInput = cv2.imread('noInput.png')
+
 
 
 def startVideo(cameraID):
@@ -20,7 +16,7 @@ def startVideo(cameraID):
         return False
     return video
 
-def analyseFrame(video):
+def analyseFrame(video, data, faceCascade):
     ''' Analyses given video for faces, compares with images in 'Images'
     folder and overlays frame with name and box around the detected face'''
     
@@ -92,6 +88,12 @@ def alert():
     
 
 def start(cameraID):
+    cascPathface = os.path.dirname(
+    cv2.__file__) + "/data/haarcascade_frontalface_alt2.xml"
+    faceCascade = cv2.CascadeClassifier(cascPathface)
+    data = pickle.loads(open('face_enc', "rb").read()) # Face encodings of previously stored images of people
+    #noInput = cv2.imread('noInput.png')
+
     recognised = False
     video = startVideo(cameraID)
 
@@ -99,7 +101,7 @@ def start(cameraID):
         print("Error: No valid camera")
         return False
     while True:
-        analysis = analyseFrame(video=video)
+        analysis = analyseFrame(video, data, faceCascade)
         
         if analysis is None:
             continue
@@ -117,3 +119,5 @@ def start(cameraID):
     video.release()
     cv2.destroyAllWindows()
     return recognised
+
+

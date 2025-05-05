@@ -32,3 +32,4 @@ def updateFaces():
     # Writing data to file
     f.close()
     # Closing file 
+updateFaces()
