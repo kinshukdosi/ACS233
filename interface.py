@@ -42,7 +42,10 @@ def keypad_selection(text):
             keypad.selector_mode = False
             
         elif text.strip()[0] == '2':
-            name = 'Placeholder'
+            keypad.enterring_name = True
+
+        elif text.strip()[0] == 'N':
+            name = text.strip[1:]
             addFace.startAddFace(0, name)
             updateFaces.updateFaces()
             logTable.add_record(

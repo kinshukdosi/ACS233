@@ -19,7 +19,9 @@ class keypad(tk.Frame):
         self.cursor = 2.0
         self.text_output = []
         self.entered_pin = []
+        self.entered_name = []
         self.selector_mode = False
+        self.enterring_name = False
 
         #System Variables
         self.access_level = 0
@@ -86,18 +88,25 @@ class keypad(tk.Frame):
         elif text == 'Face':
             self.key_callback(text)
         elif text == 'Ent':
-            if(self.access_level == 0 and not(self.selector_mode)):
-                self.key_callback(''.join(self.entered_pin))
-                self.entered_pin = []
-            if(self.selector_mode):
-                self.key_callback("D" + str(self.text_output[int(self.cursor)-1]))
+            if(self.enterring_name):
+                self.key_callback('N' + ''.join(self.entered_name))
+                self.entered_name = []
             else:
-                try:
-                    self.key_callback(str(self.text_output[int(self.cursor)-1]))
-                except IndexError:
-                    print("Nothing selected")
+                if(self.access_level == 0 and not(self.selector_mode)):
+                    self.key_callback(''.join(self.entered_pin))
+                    self.entered_pin = []
+                if(self.selector_mode):
+                    self.key_callback("D" + str(self.text_output[int(self.cursor)-1]))
+                else:
+                    try:
+                        self.key_callback(str(self.text_output[int(self.cursor)-1]))
+                    except IndexError:
+                        print("Nothing selected")
         else:
-            self.entered_pin.append(text)
+            if(self.enterring_name):
+                self.entered_name.append(text)
+            else:
+                self.entered_pin.append(text)
 
     #creates output window inside main window as a text box
     def create_output_window(self):
@@ -122,11 +131,15 @@ class keypad(tk.Frame):
                 else:
                     self.text_output = ['Level 1 accessed\n', '1.Switch to day mode\n']
             elif(self.access_level == 2):
-                if(self.system_mode == 'D'):
-                    self.text_output =['Level 2 accessed\n', '1.Switch to night mode\n', '2.Add face\n', '3.Delete face\n', '4.Deactivate system\n', '5.change pin\n', '6.Export log to csv']
+                if(self.enterring_name):
+                    self.text_output = ["Enter user ID: ", self.entered_name]
+
                 else:
-                    self.text_output =['Level 2 accessed\n', '1.Switch to day mode\n', '2.Add face\n', '3.Delete face\n', '4.Deactivate system\n', '5.change pin\n', '6.Export log to csv']
-        
+                    if(self.system_mode == 'D'):
+                        self.text_output =['Level 2 accessed\n', '1.Switch to night mode\n', '2.Add face\n', '3.Delete face\n', '4.Deactivate system\n', '5.change pin\n', '6.Export log to csv']
+                    else:
+                        self.text_output =['Level 2 accessed\n', '1.Switch to day mode\n', '2.Add face\n', '3.Delete face\n', '4.Deactivate system\n', '5.change pin\n', '6.Export log to csv']
+
         if(temp_text_output != self.text_output):
             self.cursor = 2.0
 
@@ -146,7 +159,7 @@ class keypad(tk.Frame):
         self.output_window.tag_config('highlightline', background = "white", foreground = 'black')
 
         self.sensor_triggered_window.delete('1.0', tk.END)
-        self.sensor_triggered_window.insert(tk.END, decode_sensor(self.sector_triggered))
+        self.sensor_triggered_window.insert(tk.END, self.decode_sensor(self.sector_triggered))
         self.after(10, self.update_output_window)
 
 
