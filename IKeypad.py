@@ -19,6 +19,7 @@ class keypad(tk.Frame):
         self.cursor = 2.0
         self.text_output = []
         self.entered_pin = []
+        self.selector_mode = False
 
         #System Variables
         self.access_level = 0
@@ -30,10 +31,6 @@ class keypad(tk.Frame):
         self.create_keypad()
         self.update_output_window()
 
-        # Creates a database object
-        db_fields = {'[Date]': 'TEXT', '[Time]': 'TEXT', 'Action': 'TEXT', 'Type': 'TEXT'}
-        self.logTable = DatabaseTable(r'securityRecords.accdb', 'log', db_fields)
-    
     #method creates keypad
     def create_keypad(self):
         #defines button style
@@ -45,7 +42,7 @@ class keypad(tk.Frame):
             '1', '2', '3', '^',
             '4', '5', '6', 'Ent',
             '7', '8', '9', 'v',
-            'Face', '0', 'Del', 'Exit'
+            'Face', '0', 'Del', 'Logout'
             ]
 
         #iterates through to place buttons starting on column 10 to make room for output window
@@ -66,6 +63,8 @@ class keypad(tk.Frame):
             sys.exit()
         elif text == ' ':
             pass
+        elif text == 'Logout':
+            self.key_callback(text)
         #moves cursor up when in menu    
         elif text == '^':
             if(self.cursor > 2):
@@ -80,15 +79,13 @@ class keypad(tk.Frame):
                 self.entered_pin.pop()
         #
         elif text == 'Face':
-            self.access_level += 1
-            self.logTable.add_record(
-                [datetime.now().strftime("%d/%m/%y"), datetime.now().strftime("%H:%M:%S"), 'Access Level 2 granted',
-                 'name needs to be entered'])
             self.key_callback(text)
         elif text == 'Ent':
-            if(self.access_level == 0):
+            if(self.access_level == 0 and not(self.selector_mode)):
                 self.key_callback(''.join(self.entered_pin))
                 self.entered_pin = []
+            if(self.selector_mode):
+                self.key_callback("D" + str(self.text_output[int(self.cursor)-1]))
             else:
                 self.key_callback(str(self.text_output[int(self.cursor)-1]))
         else:
@@ -102,21 +99,22 @@ class keypad(tk.Frame):
     #updates output window by clearing window then reprinting the text_output variable
     #also adds cursor when in menu
     def update_output_window(self):
-        if(self.access_level == 0):
-            self.text_output = ["Enter pin:", ]
-            for i in self.entered_pin:
-                self.text_output.append('*')
-        elif(self.access_level == 1):
-            if(self.system_mode == 'D'):
-                self.text_output = ['Level 1 accessed\n', '1.Switch to night mode\n']
-            else:
-                self.text_output = ['Level 1 accessed\n', '1.Switch to day mode\n']
-        elif(self.access_level == 2):
-            if(self.system_mode == 'D'):
-                self.text_output =['Level 2 accessed\n', '1.Switch to night mode\n', '2.Add face\n', '3.Delete face\n', '4.Deactivate system\n', '5.change pin\n']
-            else:
-                self.text_output =['Level 2 accessed\n', '1.Switch to day mode\n', '2.Add face\n', '3.Delete face\n', '4.Deactivate system\n', '5.change pin\n']
-            
+        if(not(self.selector_mode)):
+            if(self.access_level == 0):
+                self.text_output = ["Enter pin:", ]
+                for i in self.entered_pin:
+                    self.text_output.append('*')
+            elif(self.access_level == 1):
+                if(self.system_mode == 'D'):
+                    self.text_output = ['Level 1 accessed\n', '1.Switch to night mode\n']
+                else:
+                    self.text_output = ['Level 1 accessed\n', '1.Switch to day mode\n']
+            elif(self.access_level == 2):
+                if(self.system_mode == 'D'):
+                    self.text_output =['Level 2 accessed\n', '1.Switch to night mode\n', '2.Add face\n', '3.Delete face\n', '4.Deactivate system\n', '5.change pin\n']
+                else:
+                    self.text_output =['Level 2 accessed\n', '1.Switch to day mode\n', '2.Add face\n', '3.Delete face\n', '4.Deactivate system\n', '5.change pin\n']
+                
 
 
         current_time = datetime.now().time()

@@ -57,9 +57,8 @@ def startAddFace(cameraID, name):
             captureFace(name, frame)
             print(f"Added face for {name}!")
             break
+    video.release()
+    cv2.destroyAllWindows()
 
 
-cameraID = 0
-startAddFace(cameraID, "Jamie")
-updateFaces()
 
