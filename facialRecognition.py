@@ -81,8 +81,7 @@ def start(cameraID):
         if analysis is None:
             continue
             
-        frame, recognised, names = analysis
-        print(names)
+        frame, recognised, face_id = analysis
         
         cv2.imshow("Frame", frame)
 
@@ -97,6 +96,6 @@ def start(cameraID):
     
     video.release()
     cv2.destroyAllWindows()
-    return recognised
+    return recognised, face_id
 
 
