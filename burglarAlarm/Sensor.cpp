@@ -47,6 +47,6 @@ bool Sensor::isTriggered(){
         return currentState;
     }
     else{
-        return 0;
+        return false;
     }
 }
