@@ -71,9 +71,10 @@ def get_selection_message(selection):
 def get_face_del():
     try:
         names = [name + '\n' for name in os.listdir("Images") if os.path.isdir(os.path.join("Images", name))]
-        names.append("Exit")
+        names.append("Exit\n")
+        names.insert(0, "Select a face to be deleted\n")
     except FileNotFoundError:
-        names = ["No image files found", "Exit"]
+        names = ["No image files found\n", "Exit\n"]
     keypad.selector_mode = True
     keypad.text_output = names
 

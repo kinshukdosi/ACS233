@@ -64,6 +64,7 @@ class keypad(tk.Frame):
         elif text == ' ':
             pass
         elif text == 'Logout':
+            self.selector_mode = False
             self.key_callback(text)
         #moves cursor up when in menu    
         elif text == '^':
@@ -99,6 +100,7 @@ class keypad(tk.Frame):
     #updates output window by clearing window then reprinting the text_output variable
     #also adds cursor when in menu
     def update_output_window(self):
+        temp_text_output = self.text_output
         if(not(self.selector_mode)):
             if(self.access_level == 0):
                 self.text_output = ["Enter pin:", ]
@@ -114,7 +116,9 @@ class keypad(tk.Frame):
                     self.text_output =['Level 2 accessed\n', '1.Switch to night mode\n', '2.Add face\n', '3.Delete face\n', '4.Deactivate system\n', '5.change pin\n']
                 else:
                     self.text_output =['Level 2 accessed\n', '1.Switch to day mode\n', '2.Add face\n', '3.Delete face\n', '4.Deactivate system\n', '5.change pin\n']
-                
+        
+        if(temp_text_output != self.text_output):
+            self.cursor = 2.0
 
 
         current_time = datetime.now().time()
@@ -127,8 +131,8 @@ class keypad(tk.Frame):
             else: 
                 self.output_window.insert(tk.END, line)
 
-        
-        self.output_window.tag_add('highlightline', self.cursor, self.cursor+1.0)
+        if int(self.cursor) < (len(self.text_output) + 1):
+            self.output_window.tag_add('highlightline', f"{int(self.cursor)}.0", f"{int(self.cursor+1.0)}.0")
         self.output_window.tag_config('highlightline', background = "white", foreground = 'black')
 
         self.after(50, self.update_output_window)
