@@ -96,6 +96,17 @@ Session::Session(char systemMode){
     this->nightSensors[5] = new Sensor(pinPIR_2, "REC_PIR_2", false);
 }
 
+boolean Session::checkPin(char correctPIN[], char enteredPIN[]){
+  boolean comparePINs = true;
+  for (int i=0; i<4; i++){
+      if (correctPIN[i] != enteredPIN[i+1]){
+        boolean comparePINs = false;
+      }
+  }
+
+  return comparePINs;
+}
+
 void Session::run(){
   // Send data to python
   char tempString[2] = "x";
@@ -176,13 +187,9 @@ void Session::run(){
     // Deal with PIN input
     else if (receivedMessage[0] == 'p')
     {
-        bool PINsMatch = true;
-        for (int i=0; i<4; i++){
-          if (correctPIN[i] != receivedMessage[i+1]){
-            PINsMatch = false;
-            SerialWrite(receivedMessage[i+1], correctPIN);
-          }
-        }
+        // Checks if the entered PIN matches
+        bool PINsMatch = checkPin(correctPIN, receivedMessage);
+        //SerialWrite(receivedMessage[i+1], correctPIN);
 
         // If PIN is correct, log in and reset alarm
         if (PINsMatch){
