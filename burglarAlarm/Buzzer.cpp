@@ -1,23 +1,19 @@
 #include "Buzzer.h"
 
+// Default Constructor //
 Buzzer::Buzzer(){
     this->pin = 0;
     this->pitch = 200;
-    //this->buzzerCutOffTime = 0;
-    //this->buzzerActivatedTimestamp = 0;
-
-    // Write a string, ensuring it doesn't execeed 15 chars + '\0'
     this->name[0] = '\0';
     
     pinMode(pin, OUTPUT);
     off();
 }
 
+// Constructor //
 Buzzer::Buzzer(int pin, char name[], int pitch){
     this->pin = pin;
     this->pitch = pitch;
-    //this->buzzerCutOffTime = 0;
-    //this->buzzerActivatedTimestamp = 0;
 
     // Write a string, ensuring it doesn't execeed 15 chars + '\0'
     int i = 0;
@@ -31,19 +27,12 @@ Buzzer::Buzzer(int pin, char name[], int pitch){
     off();
 }
 
+// Sound Buzzer //
 Buzzer::on(){
     tone(pin, pitch);
-    //Serial.print(pin);
-    //Serial.print(", ");
-    //Serial.println(pitch);
 }
 
+// Silence Buzzer //
 Buzzer::off(){
     noTone(pin);
 }
-
-/*
-void Buzzer::soundAlarm(){
-
-}
-*/

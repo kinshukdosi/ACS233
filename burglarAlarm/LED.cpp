@@ -1,17 +1,18 @@
 #include "LED.h"
 
+// Default Constructor //
 LED::LED(){
     this->pin = 0;
     this->flashFreq = 200;
     this->flashTimer = 0;
     this->prevState = false;
-
     this->name[0] = '\0';
 
     pinMode(pin, OUTPUT);
     off();
 }
 
+// Constructor //
 LED::LED(int pin, char name[], int flashFreq){
     this->pin = pin;
     this->flashFreq = flashFreq;
@@ -30,7 +31,7 @@ LED::LED(int pin, char name[], int flashFreq){
     off();
 }
 
-// Flash function needs reworking
+// Flashes LED //
 void LED::on(){
     if (millis() > flashTimer+flashFreq){
         flashTimer = millis();

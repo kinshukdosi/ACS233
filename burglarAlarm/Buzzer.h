@@ -2,15 +2,17 @@
 #include "Actuator.h"
 using namespace std;
 
+// Define Buzzer Class as a Child of Actuator //
 class Buzzer: public Actuator{
     private:
-        int pitch; // Changed tone to pitch as it cause issues with tone() function
-        //int buzzerCutOffTime;
-        //int buzzerActivatedTimestamp;
+        // Private Atributes //
+        int pitch;
     public:
+        // Constructors //
         Buzzer();
         Buzzer(int pin, char name[], int pitch);
-        //void soundAlarm();
+
+        // Redefine on() and off() methods to use tone() function
         on();
         off();
 };

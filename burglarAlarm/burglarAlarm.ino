@@ -1,6 +1,6 @@
-// INCLUDE CLASSES //
 #include "Session.h"
 
+// Instantiate Session Class //
 Session MainSession('N');
 
 // SET UP //

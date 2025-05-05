@@ -2,13 +2,14 @@
 #include "Actuator.h"
 using namespace std;
 
+// Define Solenoid Class as a Child of Actuator //
 class Solenoid: public Actuator{
-    //private:
-        //int state;
     public:
+        // Constructors
         Solenoid();
-        Solenoid(int pin, char name[]); //, int state);
+        Solenoid(int pin, char name[]);
+
+        // redefine on() and off() to make more sense
         on();
         off();
-        //void toggleState();
 };

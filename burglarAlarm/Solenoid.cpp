@@ -1,19 +1,17 @@
 #include "Solenoid.h"
 
-Solenoid::Solenoid(){ //, int state){
+// Default Constructor //
+Solenoid::Solenoid(){
     this->pin = pin;
-    //this->state = state;
-
-    // Write a string, ensuring it doesn't execeed 15 chars + '\0'
     this->name[0] = '\0';
     
     pinMode(pin, OUTPUT);
     on();
 }
 
-Solenoid::Solenoid(int pin, char name[]){ //, int state){
+// Constructor //
+Solenoid::Solenoid(int pin, char name[]){
     this->pin = pin;
-    //this->state = state;
 
     // Write a string, ensuring it doesn't execeed 15 chars + '\0'
     int i = 0;
@@ -27,10 +25,12 @@ Solenoid::Solenoid(int pin, char name[]){ //, int state){
     on();
 }
 
+// Unlock Door //
 Solenoid::off(){
     digitalWrite(pin, HIGH);
 }
 
+// Lock Door //
 Solenoid::on(){
     digitalWrite(pin, LOW);
 }
