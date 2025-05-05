@@ -103,17 +103,13 @@ if __name__ == "__main__":
 
     # Open the database
     logTable = DatabaseTable(db_path, 'log', db_fields)
-    facetable = DatabaseTable(db_path, 'faces', face_fields)
-    facetable.add_record(['Vasee'])
 
 
     # Add a sample record
     logTable.add_record(
-        [datetime.now().strftime("%d/%m/%y"), datetime.now().strftime("%H:%M:%S"), 'Access granted', 'Level 2 access'])
+        ['05/05/24', datetime.now().strftime("%H:%M:%S"), 'hhhhhhhhhhhhhhhhh', 'Level 2 access'])
 
     logTable.export_to_csv()
-
-    logTable.delete_old_records(0)
 
     # Close the connection
     logTable.close_connection()

@@ -33,9 +33,9 @@ Buzzer::Buzzer(int pin, char name[], int pitch){
 
 Buzzer::on(){
     tone(pin, pitch);
-    Serial.print(pin);
-    Serial.print(", ");
-    Serial.println(pitch);
+    //Serial.print(pin);
+    //Serial.print(", ");
+    //Serial.println(pitch);
 }
 
 Buzzer::off(){

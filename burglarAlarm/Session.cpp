@@ -116,7 +116,7 @@ boolean Session::checkPin(char correctPIN[], char enteredPIN[]){
 
 void Session::run(){
   // Send data to python
-  /*
+  
   char tempString[2] = "x";
   if (millis() > lastMessageTime + sendDelay){
       lastMessageTime = millis();
@@ -137,7 +137,7 @@ void Session::run(){
         SerialWrite('t', "F");
       }
   }
-  */
+  
 
   // Check day mode sensors //
   if (systemMode == 'D'){
@@ -316,7 +316,7 @@ void Session::activateAlarm(){
     (*alarmBuzzers[i]).on();
   }
 
-  /*
+  
   if (millis() < timeTriggered + alarmOffTime){
     for (int i=0; i<5; i++){ // change 1 to 5 when ready to use buzzer
       (*alarmBuzzers[i]).on();
@@ -328,7 +328,7 @@ void Session::activateAlarm(){
     }
   }
   prevAlarmTriggered = true;
-  */
+  
 }
 
 void Session::deactivateAlarm(){

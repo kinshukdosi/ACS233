@@ -96,6 +96,8 @@ def start(cameraID):
     
     video.release()
     cv2.destroyAllWindows()
+    print(recognised)
+    print(face_id)
     return recognised, face_id
 
 

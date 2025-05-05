@@ -27,14 +27,14 @@ class keypad(tk.Frame):
         self.access_level = 0
         self.system_mode = 'I'
         self.alarm_state = 'F'
-        self.sector_triggered = 'No sensor triggered'
+        self.sector_triggered = "No sensor triggered"
 
         #calling methods to create window
         self.create_output_window()
         self.create_keypad()
         self.update_output_window()
 
-        self.interaction_time = 0
+        self.interaction_time = time.time()
 
     #method creates keypad
     def create_keypad(self):
@@ -120,6 +120,11 @@ class keypad(tk.Frame):
     #also adds cursor when in menu
     def update_output_window(self):
         temp_text_output = self.text_output
+
+        if(self.alarm_state == 'F'):
+            self.sector_triggered = "No sensor triggered"
+
+
         if(not(self.selector_mode)):
             if(self.access_level == 0):
                 self.text_output = ["Enter pin:", ]
@@ -163,26 +168,30 @@ class keypad(tk.Frame):
         self.after(10, self.update_output_window)
 
 
-    def decode_sensor(code):
-        output = ""
-        if(code[:3] == "REC"):
-            output = "Reception "
-        elif(code[:3] == "GAL"):
-            output = "Gallery "
-        
-        if(code[3:6] == "LED"):
-            return ""
-        elif(code[3:6] == "CAS"):
-            output = output + "case "
-        elif(code[3:6] == "BUT"):
-            output = output + "panic button"
-        elif(code[3:6] == "PAI"):
-            output = output + "painting "
-        elif(code[3:6] == "DOO"):
-            output = output + "door "
-        elif(code[3:6] == "WIN"):
-            output = output + "window "
-        elif(code[3:6] == "PIR"):
-            output = output + "motion sensor "
+    def decode_sensor(self, code):
+        if(code != "No sensor triggered"):
+            output = ""
+            if(code[:3] == "REC"):
+                output = "Reception "
+            elif(code[:3] == "GAL"):
+                output = "Gallery "
+            
+            if(code[4:7] == "LED"):
+                return ""
+            elif(code[4:7] == "CAS"):
+                output = output + "case "
+            elif(code[4:7] == "BUT"):
+                output = output + "panic button "
+            elif(code[4:7] == "PAI"):
+                output = output + "painting "
+            elif(code[4:7] == "DOO"):
+                output = output + "door "
+            elif(code[4:7] == "WIN"):
+                output = output + "window "
+            elif(code[4:7] == "PIR"):
+                output = output + "motion sensor "
 
-        output = output + code[:-1]
+            output = output + code[8]
+            return output
+        else:
+            return code

@@ -1,0 +1,435 @@
+id,Date,Time,Action,Type
+1,04/05/25,18:14:52,Changed mode,Changed to Day mode
+2,04/05/25,18:14:57,Access Level 1 granted,-
+3,04/05/25,18:14:59,Changed mode,Changed to Night mode
+4,04/05/25,18:15:11,Alarm Activated,Pin entered wrong 3 times
+5,04/05/25,18:15:11,Alarm Activated,REC_PIR_1
+6,04/05/25,18:15:27,Access granted,Level 2 access
+7,04/05/25,18:50:25,Changed mode,Changed to Day mode
+8,04/05/25,18:50:32,Access Level 1 granted,-
+9,04/05/25,18:52:04,Changed mode,Changed to Day mode
+10,04/05/25,18:52:08,Access Level 1 granted,-
+11,04/05/25,18:57:31,Changed mode,Changed to Day mode
+12,04/05/25,18:57:35,Access Level 1 granted,-
+13,04/05/25,18:57:56,Logged out,-
+14,04/05/25,18:58:00,Access Level 1 granted,-
+15,04/05/25,19:01:14,Changed mode,Changed to Day mode
+16,04/05/25,19:01:16,Access Level 1 granted,-
+17,04/05/25,19:01:18,Access Level 2 granted,name needs to be entered
+18,04/05/25,19:01:30,Logged out,-
+19,04/05/25,19:01:35,Access Level 1 granted,-
+20,04/05/25,19:01:36,Access Level 2 granted,name needs to be entered
+21,04/05/25,19:02:11,Changed mode,Changed to Day mode
+22,04/05/25,19:02:14,Access Level 1 granted,-
+23,04/05/25,19:03:52,Changed mode,Changed to Day mode
+24,04/05/25,19:03:55,Access Level 1 granted,-
+25,04/05/25,19:18:27,Changed mode,Changed to Day mode
+26,04/05/25,19:18:33,Access Level 1 granted,-
+27,04/05/25,19:19:12,Changed mode,Changed to Day mode
+28,04/05/25,19:19:22,Access Level 1 granted,-
+29,04/05/25,19:19:36,Access Level 2 granted,name needs to be entered
+30,04/05/25,19:20:02,Logged out,-
+31,04/05/25,19:20:14,Access Level 1 granted,-
+32,04/05/25,19:21:53,Changed mode,Changed to Day mode
+33,04/05/25,19:22:04,Access Level 1 granted,-
+34,04/05/25,19:23:03,Changed mode,Changed to Day mode
+35,04/05/25,19:23:06,Access Level 1 granted,-
+36,04/05/25,19:23:12,Access Level 2 granted,name needs to be entered
+37,04/05/25,19:23:19,Logged out,-
+38,04/05/25,19:23:25,Access Level 1 granted,-
+39,04/05/25,19:23:28,Access Level 2 granted,name needs to be entered
+40,04/05/25,19:26:30,Changed mode,Changed to Day mode
+41,04/05/25,19:26:35,Access Level 1 granted,-
+42,04/05/25,19:26:38,Access Level 2 granted,name needs to be entered
+43,04/05/25,19:51:04,Changed mode,Changed to Day mode
+44,04/05/25,19:51:08,Logged out,-
+45,04/05/25,19:51:19,Access Level 1 granted,-
+46,04/05/25,19:51:27,Access Level 2 granted,name needs to be entered
+47,04/05/25,19:52:55,Changed mode,Changed to Day mode
+48,04/05/25,19:53:04,Access Level 1 granted,-
+49,04/05/25,19:53:08,Access Level 2 granted,name needs to be entered
+50,04/05/25,19:53:27,Logged out,-
+51,04/05/25,19:53:47,Alarm Activated,Pin entered wrong 3 times
+52,04/05/25,19:57:37,Changed mode,Changed to Day mode
+53,04/05/25,19:57:42,Access Level 1 granted,-
+54,04/05/25,19:57:46,Access Level 2 granted,name needs to be entered
+55,04/05/25,19:58:13,Logged out,-
+56,04/05/25,19:59:43,Changed mode,Changed to Day mode
+57,04/05/25,19:59:49,Access Level 1 granted,-
+58,04/05/25,19:59:52,Access Level 2 granted,name needs to be entered
+59,04/05/25,20:00:44,Changed mode,Changed to Idle
+60,04/05/25,20:00:50,Logged out,-
+61,04/05/25,20:01:01,Access Level 1 granted,-
+62,05/05/25,13:20:30,Changed mode,Changed to Day mode
+63,05/05/25,13:20:36,Access Level 1 granted,-
+64,05/05/25,13:20:51,Access Level 2 granted,name needs to be entered
+65,05/05/25,13:21:23,Face Added,Placeholder
+66,05/05/25,13:21:27,Logged out,-
+67,05/05/25,13:21:35,Logged out,-
+68,05/05/25,13:21:51,Access Level 1 granted,-
+69,05/05/25,13:27:41,Changed mode,Changed to Day mode
+70,05/05/25,13:28:16,Access Level 1 granted,-
+71,05/05/25,13:28:32,Access Level 2 granted,name needs to be entered
+72,05/05/25,13:28:54,Face Deleted,
+73,05/05/25,13:29:05,Face Deleted,
+74,05/05/25,13:29:16,Face Added,Placeholder
+75,05/05/25,13:29:20,Logged out,-
+76,05/05/25,13:29:31,Access Level 1 granted,-
+77,05/05/25,13:31:49,Changed mode,Changed to Day mode
+78,05/05/25,13:32:40,Changed mode,Changed to Day mode
+79,05/05/25,13:32:50,Alarm Activated,Pin entered wrong 3 times
+80,05/05/25,13:32:56,Access Level 1 granted,-
+81,05/05/25,13:32:57,Deactivated Alarm,-
+82,05/05/25,13:33:01,Access Level 2 granted,name needs to be entered
+83,05/05/25,13:35:28,Changed mode,Changed to Day mode
+84,05/05/25,13:35:37,Access Level 1 granted,-
+85,05/05/25,13:35:44,Access Level 2 granted,name needs to be entered
+86,05/05/25,13:36:16,Face Deleted,
+87,05/05/25,13:36:29,Face Added,Placeholder
+88,05/05/25,13:36:50,Logged out,-
+89,05/05/25,13:36:57,Access Level 1 granted,-
+90,05/05/25,13:37:02,Access Level 2 granted,name needs to be entered
+91,05/05/25,13:39:20,Changed mode,Changed to Day mode
+92,05/05/25,13:39:29,Access Level 1 granted,-
+93,05/05/25,13:39:37,Access Level 2 granted,name needs to be entered
+94,05/05/25,13:40:20,Logged out,-
+95,05/05/25,13:41:27,Changed mode,Changed to Day mode
+96,05/05/25,13:41:30,Access Level 1 granted,-
+97,05/05/25,13:41:39,Access Level 2 granted,name needs to be entered
+98,05/05/25,13:41:57,Changed mode,Changed to Night mode
+99,05/05/25,13:41:57,Alarm Activated,REC_PIR_1
+100,05/05/25,13:42:02,Logged out,-
+101,05/05/25,13:42:12,Access Level 1 granted,-
+102,05/05/25,13:42:12,Deactivated Alarm,-
+103,05/05/25,13:42:17,Access Level 2 granted,name needs to be entered
+104,05/05/25,13:42:18,Alarm Activated,REC_PIR_1
+105,05/05/25,13:42:20,Logged out,-
+106,05/05/25,13:42:26,Alarm Activated,Pin entered wrong 3 times
+107,05/05/25,13:42:29,Access Level 1 granted,-
+108,05/05/25,13:42:29,Deactivated Alarm,-
+109,05/05/25,13:42:39,Alarm Activated,REC_PIR_1
+110,05/05/25,13:42:42,Access Level 2 granted,name needs to be entered
+111,05/05/25,13:42:51,Access Level 1 granted,-
+112,05/05/25,13:42:51,Deactivated Alarm,-
+113,05/05/25,13:42:55,Access Level 2 granted,name needs to be entered
+114,05/05/25,13:43:00,Alarm Activated,REC_PIR_1
+115,05/05/25,13:43:06,Face Deleted,
+116,05/05/25,13:43:13,Access Level 1 granted,-
+117,05/05/25,13:43:14,Deactivated Alarm,-
+118,05/05/25,13:43:19,Access Level 2 granted,name needs to be entered
+119,05/05/25,13:47:05,Changed mode,Changed to Night mode
+120,05/05/25,13:47:07,Changed mode,Changed to Day mode
+121,05/05/25,13:47:07,Deactivated Alarm,-
+122,05/05/25,13:47:16,Access Level 1 granted,-
+123,05/05/25,13:47:24,Access Level 2 granted,name needs to be entered
+124,05/05/25,13:47:44,Face Added,Placeholder
+125,05/05/25,13:47:47,Logged out,-
+126,05/05/25,13:47:51,Access Level 1 granted,-
+127,05/05/25,13:47:58,Access Level 2 granted,name needs to be entered
+128,05/05/25,13:48:05,Face Deleted,
+129,05/05/25,13:48:16,Logged out,-
+130,05/05/25,13:48:24,Access Level 1 granted,-
+131,05/05/25,13:54:01,Changed mode,Changed to Day mode
+132,05/05/25,13:54:10,Access Level 1 granted,-
+133,05/05/25,13:56:10,Changed mode,Changed to Day mode
+134,05/05/25,13:56:16,Access Level 1 granted,-
+135,05/05/25,13:56:51,Access Level 2 granted,name needs to be entered
+136,05/05/25,13:57:46,Changed mode,Changed to Day mode
+137,05/05/25,13:57:53,Access Level 1 granted,-
+138,05/05/25,13:58:01,Access Level 2 granted,name needs to be entered
+139,05/05/25,13:58:12,Face Added,Placeholder
+140,05/05/25,13:58:16,Logged out,-
+141,05/05/25,13:58:37,Alarm Activated,Pin entered wrong 3 times
+142,05/05/25,14:05:12,Changed mode,Changed to Day mode
+143,05/05/25,14:05:15,Access Level 1 granted,-
+144,05/05/25,14:05:19,Access Level 2 granted,name needs to be entered
+145,05/05/25,14:05:36,Face Deleted,
+146,05/05/25,14:05:47,Face Added,Placeholder
+147,05/05/25,14:05:53,Logged out,-
+148,05/05/25,14:12:27,Changed mode,Changed to Day mode
+149,05/05/25,14:12:30,Access Level 1 granted,-
+150,05/05/25,14:12:35,Access Level 2 granted,name needs to be entered
+151,05/05/25,14:14:50,Changed mode,Changed to Day mode
+152,05/05/25,14:14:55,Access Level 1 granted,-
+153,05/05/25,14:14:59,Access Level 2 granted,name needs to be entered
+154,05/05/25,14:15:02,Logged out,-
+155,05/05/25,14:15:05,Access Level 1 granted,-
+156,05/05/25,14:15:09,Access Level 2 granted,name needs to be entered
+157,05/05/25,14:15:42,Changed mode,Changed to Day mode
+158,05/05/25,14:16:01,Changed mode,Changed to Day mode
+159,05/05/25,14:16:04,Access Level 1 granted,-
+160,05/05/25,14:16:11,Changed mode,Changed to Night mode
+161,05/05/25,14:16:13,Changed mode,Changed to Day mode
+162,05/05/25,14:16:17,Access Level 2 granted,name needs to be entered
+163,05/05/25,14:19:34,Changed mode,Changed to Day mode
+164,05/05/25,14:20:01,Changed mode,Changed to Day mode
+165,05/05/25,14:21:26,Changed mode,Changed to Day mode
+166,05/05/25,14:21:35,Access Level 1 granted,-
+167,05/05/25,14:21:35,Deactivated Alarm,-
+168,05/05/25,14:21:45,Access Level 2 granted,name needs to be entered
+169,05/05/25,14:23:13,Changed mode,Changed to Day mode
+170,05/05/25,14:23:17,Access Level 1 granted,-
+171,05/05/25,14:23:27,Changed mode,Changed to Night mode
+172,05/05/25,14:23:30,Alarm Activated,REC_PIR_1
+173,05/05/25,14:23:33,Changed mode,Changed to Day mode
+174,05/05/25,14:23:37,Access Level 2 granted,name needs to be entered
+175,05/05/25,14:23:44,Changed mode,Changed to Night mode
+176,05/05/25,14:23:53,Access Level 1 granted,-
+177,05/05/25,14:23:53,Deactivated Alarm,-
+178,05/05/25,14:24:00,Access Level 2 granted,name needs to be entered
+179,05/05/25,14:24:04,Changed mode,Changed to Day mode
+180,05/05/25,14:24:09,Changed mode,Changed to Night mode
+181,05/05/25,14:24:20,Changed mode,Changed to Day mode
+182,05/05/25,14:26:47,Changed mode,Changed to Day mode
+183,05/05/25,14:26:54,Access Level 1 granted,-
+184,05/05/25,14:27:02,Access Level 2 granted,name needs to be entered
+185,05/05/25,14:27:34,Logged out,-
+186,05/05/25,14:47:35,Changed mode,Changed to Day mode
+187,05/05/25,14:56:52,Changed mode,Changed to Day mode
+188,05/05/25,14:56:59,Access Level 1 granted,-
+189,05/05/25,14:57:05,Changed mode,Changed to Night mode
+190,05/05/25,14:57:13,Logged out,-
+191,05/05/25,14:57:24,Access Level 1 granted,-
+192,05/05/25,14:57:36,Access Level 2 granted,name needs to be entered
+193,05/05/25,14:57:57,Alarm Activated,REC_PIR_1
+194,05/05/25,14:58:05,Alarm Activated,REC_PIR_1
+195,05/05/25,14:58:21,Alarm Activated,REC_PIR_1
+196,05/05/25,14:58:37,Alarm Activated,Pin entered wrong 3 times
+197,05/05/25,14:58:46,Alarm Activated,REC_PIR_1
+198,05/05/25,15:04:05,Changed mode,Changed to Night mode
+199,05/05/25,15:04:06,Changed mode,Changed to Day mode
+200,05/05/25,15:04:06,Deactivated Alarm,-
+201,05/05/25,15:04:11,Access Level 1 granted,-
+202,05/05/25,15:04:13,Logged out,-
+203,05/05/25,15:04:21,Alarm Activated,Pin entered wrong 3 times
+204,05/05/25,15:05:00,Access Level 1 granted,-
+205,05/05/25,15:05:01,Deactivated Alarm,-
+206,05/05/25,15:05:05,Logged out,-
+207,05/05/25,15:05:11,Alarm Activated,Pin entered wrong 3 times
+208,05/05/25,15:05:52,Changed mode,Changed to Day mode
+209,05/05/25,15:05:53,Deactivated Alarm,-
+210,05/05/25,15:06:11,Access Level 1 granted,-
+211,05/05/25,15:06:15,Logged out,-
+212,05/05/25,15:06:17,Logged out,-
+213,05/05/25,15:06:20,Logged out,-
+214,05/05/25,15:33:36,Changed mode,Changed to Night mode
+215,05/05/25,15:33:49,Alarm Activated,REC_PIR_1
+216,05/05/25,15:33:56,Alarm Activated,REC_PIR_1
+217,05/05/25,15:34:03,Access Level 1 granted,-
+218,05/05/25,15:34:03,Deactivated Alarm,-
+219,05/05/25,15:34:03,Access Level 1 granted,-
+220,05/05/25,15:34:07,Access Level 2 granted,name needs to be entered
+221,05/05/25,15:34:16,Logged out,-
+222,05/05/25,15:34:43,Access Level 1 granted,-
+223,05/05/25,15:34:43,Access Level 1 granted,-
+224,05/05/25,15:35:38,Changed mode,Changed to Night mode
+225,05/05/25,15:35:42,Access Level 1 granted,-
+226,05/05/25,15:35:42,Access Level 1 granted,-
+227,05/05/25,15:35:48,Alarm Activated,REC_PIR_1
+228,05/05/25,15:36:50,Changed mode,Changed to Night mode
+229,05/05/25,15:36:56,Access Level 1 granted,-
+230,05/05/25,15:36:56,Access Level 1 granted,-
+231,05/05/25,15:36:59,Alarm Activated,REC_PIR_1
+232,05/05/25,15:37:26,Alarm Activated,REC_PIR_1
+233,05/05/25,15:37:32,Access Level 1 granted,-
+234,05/05/25,15:37:32,Access Level 1 granted,-
+235,05/05/25,15:37:33,Deactivated Alarm,-
+236,05/05/25,15:37:35,Changed mode,Changed to Day mode
+237,05/05/25,15:37:39,Access Level 2 granted,name needs to be entered
+238,05/05/25,15:37:41,Logged out,-
+239,05/05/25,15:37:45,Access Level 1 granted,-
+240,05/05/25,15:37:45,Access Level 1 granted,-
+241,05/05/25,15:38:01,Access Level 2 granted,name needs to be entered
+242,05/05/25,15:38:08,Changed mode,Changed to Idle
+243,05/05/25,15:38:23,Logged out,-
+244,05/05/25,15:44:26,Logged out,-
+245,05/05/25,15:44:26,Changed mode,Changed to Night mode
+246,05/05/25,15:44:30,Access Level 1 granted,-
+247,05/05/25,15:44:30,Access Level 1 granted,-
+248,05/05/25,15:44:32,Logged out,-
+249,05/05/25,15:44:32,Changed mode,Changed to Day mode
+250,05/05/25,15:44:36,Access Level 1 granted,-
+251,05/05/25,15:44:36,Access Level 1 granted,-
+252,05/05/25,15:44:37,Logged out,-
+253,05/05/25,15:44:37,Changed mode,Changed to Night mode
+254,05/05/25,15:44:41,Access Level 1 granted,-
+255,05/05/25,15:44:41,Access Level 1 granted,-
+256,05/05/25,15:44:44,Access Level 2 granted,name needs to be entered
+257,05/05/25,15:44:49,Logged out,-
+258,05/05/25,15:44:49,Changed mode,Changed to Idle
+259,05/05/25,16:19:35,Logged out,-
+260,05/05/25,16:19:35,Changed mode,Changed to Day mode
+261,05/05/25,16:19:40,Access Level 1 granted,-
+262,05/05/25,16:19:40,Access Level 1 granted,-
+263,05/05/25,16:19:43,Logged out,-
+264,05/05/25,16:19:43,Changed mode,Changed to Night mode
+265,05/05/25,16:19:43,Alarm Activated,REC_PIR_1
+266,05/05/25,16:19:46,Alarm Activated,GAL_CAS_1
+267,05/05/25,16:20:10,Access Level 1 granted,-
+268,05/05/25,16:20:10,Access Level 1 granted,-
+269,05/05/25,16:20:10,Deactivated Alarm,-
+270,05/05/25,16:20:16,Logged out,-
+271,05/05/25,16:20:16,Changed mode,Changed to Day mode
+272,05/05/25,16:20:57,Access Level 1 granted,-
+273,05/05/25,16:20:57,Access Level 1 granted,-
+274,05/05/25,16:20:59,Alarm Activated,REC_PIR_1
+275,05/05/25,16:20:59,Logged out,-
+276,05/05/25,16:20:59,Changed mode,Changed to Night mode
+277,05/05/25,16:21:18,Alarm Activated,REC_PIR_1
+278,05/05/25,16:21:22,Logged out,-
+279,05/05/25,18:36:01,Access granted,Level 2 access
+280,05/05/25,18:45:25,Logged out,-
+281,05/05/25,18:45:25,Changed mode,Changed to Night mode
+282,05/05/25,18:48:19,Logged out,-
+283,05/05/25,18:48:19,Changed mode,Changed to Night mode
+284,05/05/25,18:48:36,Access Level 1 granted,-
+285,05/05/25,18:48:36,Access Level 1 granted,-
+286,05/05/25,18:48:39,Alarm Activated,GAL_PIR_1
+287,05/05/25,18:50:03,Logged out,-
+288,05/05/25,18:50:03,Changed mode,Changed to Night mode
+289,05/05/25,18:50:15,Access Level 1 granted,-
+290,05/05/25,18:50:15,Access Level 1 granted,-
+291,05/05/25,18:50:19,Alarm Activated,GAL_WIN_1
+292,05/05/25,18:54:24,Logged out,-
+293,05/05/25,18:54:24,Changed mode,Changed to Night mode
+294,05/05/25,18:54:29,Access Level 1 granted,-
+295,05/05/25,18:54:29,Access Level 1 granted,-
+296,05/05/25,18:54:30,Logged out,-
+297,05/05/25,18:54:30,Changed mode,Changed to Day mode
+298,05/05/25,18:54:41,Alarm Activated,REC_BUT_1
+299,05/05/25,18:54:49,Access Level 1 granted,-
+300,05/05/25,18:54:49,Deactivated Alarm,-
+301,05/05/25,18:54:49,Access Level 1 granted,-
+302,05/05/25,18:54:56,Alarm Activated,GAL_PIR_1
+303,05/05/25,18:54:56,Logged out,-
+304,05/05/25,18:54:56,Changed mode,Changed to Night mode
+305,05/05/25,18:55:03,Access Level 1 granted,-
+306,05/05/25,18:55:03,Access Level 1 granted,-
+307,05/05/25,18:55:03,Deactivated Alarm,-
+308,05/05/25,18:56:31,Logged out,-
+309,05/05/25,18:56:31,Changed mode,Changed to Night mode
+310,05/05/25,18:57:43,Logged out,-
+311,05/05/25,18:57:43,Changed mode,Changed to Night mode
+312,05/05/25,18:57:50,Access Level 1 granted,-
+313,05/05/25,18:57:51,Access Level 1 granted,-
+314,05/05/25,18:57:52,Logged out,-
+315,05/05/25,18:57:52,Changed mode,Changed to Day mode
+316,05/05/25,18:57:58,Access Level 1 granted,-
+317,05/05/25,18:57:58,Access Level 1 granted,-
+318,05/05/25,19:01:02,Logged out,-
+319,05/05/25,19:01:02,Changed mode,Changed to Day mode
+320,05/05/25,19:01:08,Logged out,-
+321,05/05/25,19:01:15,Logged out,-
+322,05/05/25,19:01:15,Changed mode,Changed to Night mode
+323,05/05/25,19:01:18,Access Level 1 granted,-
+324,05/05/25,19:01:19,Access Level 1 granted,-
+325,05/05/25,19:01:20,Logged out,-
+326,05/05/25,19:01:20,Changed mode,Changed to Day mode
+327,05/05/25,19:01:24,Access Level 1 granted,-
+328,05/05/25,19:01:24,Access Level 1 granted,-
+329,05/05/25,19:02:56,Logged out,-
+330,05/05/25,19:02:56,Changed mode,Changed to Day mode
+331,05/05/25,19:03:02,Logged out,-
+332,05/05/25,19:03:08,Logged out,-
+333,05/05/25,19:03:08,Changed mode,Changed to Night mode
+334,05/05/25,19:03:12,Access Level 1 granted,-
+335,05/05/25,19:03:12,Access Level 1 granted,-
+336,05/05/25,19:03:14,Logged out,-
+337,05/05/25,19:03:14,Changed mode,Changed to Day mode
+338,05/05/25,19:03:17,Access Level 1 granted,-
+339,05/05/25,19:03:17,Access Level 1 granted,-
+340,05/05/25,19:05:36,Logged out,-
+341,05/05/25,19:05:36,Changed mode,Changed to Night mode
+342,05/05/25,19:05:41,Access Level 1 granted,-
+343,05/05/25,19:05:41,Access Level 1 granted,-
+344,05/05/25,19:05:43,Logged out,-
+345,05/05/25,19:05:43,Changed mode,Changed to Day mode
+346,05/05/25,19:05:47,Access Level 1 granted,-
+347,05/05/25,19:05:47,Access Level 1 granted,-
+348,05/05/25,19:07:20,Logged out,-
+349,05/05/25,19:07:20,Changed mode,Changed to Day mode
+350,05/05/25,19:07:44,Logged out,-
+351,05/05/25,19:07:44,Changed mode,Changed to Night mode
+352,05/05/25,19:07:49,Access Level 1 granted,-
+353,05/05/25,19:07:49,Access Level 1 granted,-
+354,05/05/25,19:07:51,Logged out,-
+355,05/05/25,19:07:51,Changed mode,Changed to Day mode
+356,05/05/25,19:07:54,Access Level 1 granted,-
+357,05/05/25,19:07:54,Access Level 1 granted,-
+358,05/05/25,19:07:58,Access Level 2 granted,
+359,05/05/25,19:08:14,Face Added,12
+360,05/05/25,19:08:23,Logged out,-
+361,05/05/25,19:08:53,Logged out,-
+362,05/05/25,19:08:53,Changed mode,Changed to Night mode
+363,05/05/25,19:08:57,Alarm Activated,GAL_PIR_1
+364,05/05/25,19:08:59,Access Level 1 granted,-
+365,05/05/25,19:08:59,Access Level 1 granted,-
+366,05/05/25,19:09:07,Logged out,-
+367,05/05/25,19:09:07,Changed mode,Changed to Day mode
+368,05/05/25,19:09:10,Access Level 1 granted,-
+369,05/05/25,19:09:10,Access Level 1 granted,-
+370,05/05/25,19:09:33,Logged out,-
+371,05/05/25,19:10:17,Logged out,-
+372,05/05/25,19:10:17,Changed mode,Changed to Night mode
+373,05/05/25,19:10:24,Access Level 1 granted,-
+374,05/05/25,19:10:24,Access Level 1 granted,-
+375,05/05/25,19:10:26,Logged out,-
+376,05/05/25,19:10:26,Changed mode,Changed to Day mode
+377,05/05/25,19:10:29,Access Level 1 granted,-
+378,05/05/25,19:10:29,Access Level 1 granted,-
+379,05/05/25,19:10:44,Face Deleted,
+380,05/05/25,19:11:00,Face Added,12
+381,05/05/25,19:11:06,Logged out,-
+382,05/05/25,19:11:14,Access Level 1 granted,-
+383,05/05/25,19:11:14,Access Level 1 granted,-
+384,05/05/25,19:12:06,Logged out,-
+385,05/05/25,19:12:06,Changed mode,Changed to Night mode
+386,05/05/25,19:12:09,Access Level 1 granted,-
+387,05/05/25,19:12:09,Access Level 1 granted,-
+388,05/05/25,19:15:57,Logged out,-
+389,05/05/25,19:15:57,Changed mode,Changed to Night mode
+390,05/05/25,19:16:01,Access Level 1 granted,-
+391,05/05/25,19:16:01,Access Level 1 granted,-
+392,05/05/25,19:16:25,Alarm Activated,GAL_PIR_1
+393,05/05/25,19:16:37,Access Level 1 granted,-
+394,05/05/25,19:16:37,Access Level 1 granted,-
+395,05/05/25,19:16:37,Deactivated Alarm,-
+396,05/05/25,19:17:58,Logged out,-
+397,05/05/25,19:17:58,Changed mode,Changed to Night mode
+398,05/05/25,19:18:03,Access Level 1 granted,-
+399,05/05/25,19:18:03,Access Level 1 granted,-
+400,05/05/25,19:18:06,Access Level 2 granted,12
+401,05/05/25,19:18:17,Logged out,-
+403,05/05/25,19:21:46,Logged out,-
+404,05/05/25,19:21:46,Changed mode,Changed to Night mode
+405,05/05/25,19:21:56,Access Level 1 granted,-
+406,05/05/25,19:21:56,Access Level 1 granted,-
+407,05/05/25,19:22:00,Access Level 2 granted,12
+408,05/05/25,19:28:11,Logged out,-
+409,05/05/25,19:28:11,Changed mode,Changed to Night mode
+410,05/05/25,19:28:14,Alarm Activated,GAL_PIR_1
+411,05/05/25,19:28:18,Access Level 1 granted,-
+412,05/05/25,19:28:19,Access Level 1 granted,-
+413,05/05/25,19:28:22,Alarm Activated,GAL_PIR_1
+414,05/05/25,19:28:37,Access Level 1 granted,-
+415,05/05/25,19:28:37,Access Level 1 granted,-
+416,05/05/25,19:28:37,Deactivated Alarm,-
+417,05/05/25,19:28:44,Access Level 2 granted,12
+418,05/05/25,19:32:13,Logged out,-
+419,05/05/25,19:32:13,Changed mode,Changed to Night mode
+420,05/05/25,19:32:22,Alarm Activated,GAL_WIN_1
+421,05/05/25,19:32:26,Alarm Activated,GAL_WIN_1
+422,05/05/25,19:32:34,Access Level 1 granted,-
+423,05/05/25,19:32:34,Access Level 1 granted,-
+424,05/05/25,19:32:34,Deactivated Alarm,-
+425,05/05/25,19:32:56,Logged out,-
+426,05/05/25,19:32:56,Changed mode,Changed to Night mode
+427,05/05/25,19:33:15,Access Level 1 granted,-
+428,05/05/25,19:33:15,Access Level 1 granted,-
+429,05/05/25,19:33:18,Logged out,-
+430,05/05/25,19:33:18,Changed mode,Changed to Day mode
+431,05/05/25,19:33:35,Alarm Activated,REC_BUT_1
+432,05/05/25,19:33:41,Access Level 1 granted,-
+433,05/05/25,19:33:41,Access Level 1 granted,-
+434,05/05/25,19:33:41,Deactivated Alarm,-
+435,05/05/25,19:33:46,Access Level 2 granted,12

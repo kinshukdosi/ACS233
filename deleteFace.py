@@ -2,7 +2,7 @@ import os, sqlite3
 import updateFaces
 
 def deleteFace(ID):
-    path = f"Images/{ID}"
+    path = f"Images/{ID[0]}"
     for filename in os.listdir(path):
         file_path = os.path.join(path, filename)
         if os.path.isfile(file_path):
@@ -12,7 +12,7 @@ def deleteFace(ID):
     conn = sqlite3.connect('people.db')
     cursor = conn.cursor()
 
-    cursor.execute('DELETE FROM people WHERE ID = ?', (ID,))
+    cursor.execute('DELETE FROM people WHERE ID = ?', (ID[0],))
 
     conn.commit()
     conn.close()
@@ -23,7 +23,7 @@ def deleteFace(ID):
 def get_face_name(ID):
     conn = sqlite3.connect('people.db')
     cursor = conn.cursor()
-    cursor.execute('SELECT name FROM people WHERE ID = ?', (ID,))
+    cursor.execute('SELECT name FROM people WHERE ID = ?', (ID[0],))
     name = cursor.fetchone()
     conn.close()
     return name

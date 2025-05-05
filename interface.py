@@ -19,7 +19,7 @@ def keypad_selection(text):
     else:
         if(keypad.access_level == 1 and text == 'Face'):
             valid_face_id, face_id_num = facialRecognition.start(0)
-            face_id_name = deleteFace.get_face_name(face_id_num)
+            face_id_name = deleteFace.get_face_name(face_id_num[0])[0]
             if valid_face_id:
                 serial_write(arduino, 'f')
                 logTable.add_record(
@@ -45,11 +45,12 @@ def keypad_selection(text):
             keypad.enterring_name = True
 
         elif text.strip()[0] == 'N':
-            name = text.strip[1:]
+            name = text.strip()[1:]
             addFace.startAddFace(0, name)
             updateFaces.updateFaces()
             logTable.add_record(
                 [datetime.now().strftime("%d/%m/%y"), datetime.now().strftime("%H:%M:%S"), 'Face Added', name])
+            keypad.enterring_name = False
             
         elif text.strip()[0] == '3':
             get_face_del()
@@ -88,11 +89,12 @@ def get_face_del():
 def serial_write(arduino, message):
     toArdu = '<' + str(message) + '>'
     print("Message to Arduino: " + toArdu)
-    arduino.write(bytes(toArdu, 'utf-8'))
+    if(arduino != None):
+        arduino.write(bytes(toArdu, 'utf-8'))
 
 
 def serial_check_resp(arduino):
-    if time.time() - keypad.interaction_time > 30:
+    if (time.time() - keypad.interaction_time) > 30:
         serial_write(arduino, 'a0')
 
     if(arduino != None):
@@ -102,7 +104,7 @@ def serial_check_resp(arduino):
 
             # Response from the serial communication
             if response:
-                print("Response from arduino: " + response)
+                #print("Response from arduino: " + response)
 
                 # Current access level
                 if response[0] == 'a':
@@ -151,6 +153,7 @@ def serial_check_resp(arduino):
                         logTable.add_record(
                             [datetime.now().strftime("%d/%m/%y"), datetime.now().strftime("%H:%M:%S"),
                             'Access Level 1 granted', '-'])
+                        print(response)
                     
                     # Clears entered pin after attempt
                     if response[1] == 'f' or response[1] == 'F':
@@ -176,12 +179,13 @@ def connect_arduino():
 def shutdown_procedure():
     root.destroy()
     if arduino:
+        serial_write(arduino, 'a0')
         arduino.close()
 
 def clean_old_records():
-    logTable.delete_old_records(1)
+    logTable.delete_old_records(0)
 
-    root.after((86.4*10^6), clean_old_records())
+    root.after(86400000, clean_old_records)
 
 if __name__ == "__main__":
 
