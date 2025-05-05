@@ -143,9 +143,9 @@ class keypad(tk.Frame):
                 # shows options for level 2 access
                 else:
                     if(self.system_mode == 'D'):
-                        self.text_output =['Level 2 accessed\n', '1.Switch to night mode\n', '2.Add face\n', '3.Delete face\n', '4.Deactivate system\n', '5.change pin\n', '6.Export log to csv']
+                        self.text_output =['Level 2 accessed\n', '1.Switch to night mode\n', '2.Add face\n', '3.Delete face\n', '4.Deactivate system\n', '5.Export log to csv']
                     else:
-                        self.text_output =['Level 2 accessed\n', '1.Switch to day mode\n', '2.Add face\n', '3.Delete face\n', '4.Deactivate system\n', '5.change pin\n', '6.Export log to csv']
+                        self.text_output =['Level 2 accessed\n', '1.Switch to day mode\n', '2.Add face\n', '3.Delete face\n', '4.Deactivate system\n', '5.Export log to csv']
 
         # if text has been changed resets cursor to initial position
         if(temp_text_output != self.text_output):

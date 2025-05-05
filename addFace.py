@@ -65,3 +65,4 @@ def startAddFace(cameraID, name):
 
     video.release()  # Release the camera resource
     cv2.destroyAllWindows()  # Close all OpenCV windows
+

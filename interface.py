@@ -75,7 +75,7 @@ def keypad_selection(text):
             get_face_del()
         
         # identifies export log selection
-        elif text.strip()[0] == '6':
+        elif text.strip()[0] == '5':
             logTable.export_to_csv()
         else:
             message = get_selection_message(text) # checks if text passed needs formatting before being sent to the arduino
@@ -95,9 +95,7 @@ def get_selection_message(selection):
     # identifies idle mode aka deactivate system
     elif selection.strip()[0] == '4':
         return "mI" # message to arduino is mode Idle
-    # identifies 
-    elif selection.strip()[0] == '5':
-        return "changePin"
+    
     # returns none if it is not recognised
     else:
         return None
