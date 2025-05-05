@@ -9,6 +9,7 @@ from databaseManagement import DatabaseTable
 from datetime import datetime
 import facialRecognition, addFace, deleteFace
 import updateFaces
+import time
 import serial
 
 def keypad_selection(text):
@@ -87,6 +88,9 @@ def serial_write(arduino, message):
 
 
 def serial_check_resp(arduino):
+    if time.time() - keypad.interaction_time > 30:
+        serial_write(arduino, 'a0')
+
     if(arduino != None):
         if arduino.in_waiting > 0:
             raw_response = arduino.read_until()

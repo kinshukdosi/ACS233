@@ -32,6 +32,8 @@ class keypad(tk.Frame):
         self.create_keypad()
         self.update_output_window()
 
+        self.interaction_time = 0
+
     #method creates keypad
     def create_keypad(self):
         #defines button style
@@ -58,6 +60,7 @@ class keypad(tk.Frame):
     
     #method called when a button is pressed
     def key_pressed(self, text):
+        self.interaction_time = time.time()
         #exits application
         if text == 'Exit':
             self.destroy()

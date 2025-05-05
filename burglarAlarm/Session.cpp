@@ -49,6 +49,10 @@ Session::Session(char systemMode){
     this->awaitingPIN = false;
     this->prevAwaitingPIN = false;
 
+    // Delay before triggering alarm on exiting the building
+    this->timeExited = 0;
+    this->awaitingExit = false;
+
     // Buzzer cut off variables
     this->alarmOffTime = 4000; // 4s limit for the buzzer. 30*60*1,000=1,800,000 for 30 mins in a real life system
     this->timeTriggered = 0; // Default to 0, not used until sensor tripped
@@ -144,7 +148,8 @@ void Session::run(){
   // Check night mode sensors//
   if (systemMode == 'N'){
     (*doorLock).on();
-    // Night sensors will provide a delay before activating the alarm when in night mode
+
+    // Code for delay entering the PIN
     if (checkSensors(nightSensors, 6)){
       awaitingPIN = true;
     }
@@ -158,7 +163,11 @@ void Session::run(){
         alarmTriggered = true;
     }
 
-    if (checkSensors(daySensors, 6)){ // Need to change 5 to 6 to include panic button. Button currently used as PIN code successful
+    if (awaitingExit && millis()> timeExited + timeDelay){
+      awaitingExit = false;
+    }
+
+    if (checkSensors(daySensors, 6) && !awaitingExit){ // Need to change 5 to 6 to include panic button. Button currently used as PIN code successful
       alarmTriggered = true;
     }
   }
@@ -181,6 +190,11 @@ void Session::run(){
 
     // Switches between Day ('D'), Night ('N') and Idle ('I') modes
     if (receivedMessage[0] == 'm'){
+        if (systemMode == 'D' && receivedMessage[1] == 'N'){
+          awaitingExit = true;
+          timeExited = millis();
+          accessLevel = 0;
+        }
         systemMode = receivedMessage[1];
     }
 

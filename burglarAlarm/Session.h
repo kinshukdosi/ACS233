@@ -22,6 +22,9 @@ class Session{
         bool awaitingPIN;
         bool prevAwaitingPIN;
 
+        unsigned long timeExited;
+        bool awaitingExit;
+
         int alarmOffTime;
         unsigned long timeTriggered;
         
