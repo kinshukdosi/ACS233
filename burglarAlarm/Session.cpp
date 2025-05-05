@@ -8,30 +8,30 @@ const byte pinLED_4 = 41;  // Digital
 const byte pinLED_5 = 39;  // Doesn't have a physical LED
 
 // Buzzer Pins //
-const byte pinBuzzer_1 = 22;  // Digital
-const byte pinBuzzer_2 = 24;  // Doesn't have a physical Buzzer
-const byte pinBuzzer_3 = 26;  // Doesn't have a physical Buzzer
-const byte pinBuzzer_4 = 28;  // Doesn't have a physical Buzzer
-const byte pinBuzzer_5 = 30;  // Doesn't have a physical Buzzer
+const byte pinBuzzer_1 = 5;  // Digital
+const byte pinBuzzer_2 = 6;  // Doesn't have a physical Buzzer
+const byte pinBuzzer_3 = 7;//25;  // Doesn't have a physical Buzzer
+const byte pinBuzzer_4 = 8;  // Doesn't have a physical Buzzer
+const byte pinBuzzer_5 = 9;//27;  // Doesn't have a physical Buzzer
 
 // Solenoid Pin //
 const byte pinSolenoid_1 = 2; // Digital
 
 // Day Sensor Pins //
 const byte pinButton_1 = 49;  // Digital
-const byte pinMagnetic_1 = 5; // Digital
-const byte pinMagnetic_2 = 6; // Doesn't physically exist
-const byte pinMagnetic_3 = 7; // Doesn't physically exist
-const byte pinMagnetic_4 = 8; // Doesn't physically exist
-const byte pinMagnetic_5 = 9; // Doesn't physically exist
+const byte pinMagnetic_1 = 22; // Digital
+const byte pinMagnetic_2 = 24; // Doesn't physically exist
+const byte pinMagnetic_3 = 26; // Doesn't physically exist
+const byte pinMagnetic_4 = 28; // Doesn't physically exist
+const byte pinMagnetic_5 = 30; // Doesn't physically exist
 
 // Night Sensor Pins
 const byte pinMagnetic_6 = 10; // Doesn't physically exist
-const byte pinMagnetic_7 = 11; // Doesn't physically exist
+const byte pinMagnetic_7 = 29; // Doesn't physically exist
 const byte pinMagnetic_8 = 12; // Doesn't physically exist
 const byte pinMagnetic_9 = 13; // Doesn't physically exist
 const byte pinPIR_1 = 53; // Digital
-const byte pinPIR_2 = 51; // Doesn't physically exist
+const byte pinPIR_2 = 52; // Doesn't physically exist
 
 
 Session::Session(char systemMode){
@@ -116,6 +116,7 @@ boolean Session::checkPin(char correctPIN[], char enteredPIN[]){
 
 void Session::run(){
   // Send data to python
+  /*
   char tempString[2] = "x";
   if (millis() > lastMessageTime + sendDelay){
       lastMessageTime = millis();
@@ -136,6 +137,7 @@ void Session::run(){
         SerialWrite('t', "F");
       }
   }
+  */
 
   // Check day mode sensors //
   if (systemMode == 'D'){
@@ -310,6 +312,11 @@ void Session::activateAlarm(){
     timeTriggered = millis();
   }
 
+  for (int i=0; i<5; i++){ // change 1 to 5 when ready to use buzzer
+    (*alarmBuzzers[i]).on();
+  }
+
+  /*
   if (millis() < timeTriggered + alarmOffTime){
     for (int i=0; i<5; i++){ // change 1 to 5 when ready to use buzzer
       (*alarmBuzzers[i]).on();
@@ -321,6 +328,7 @@ void Session::activateAlarm(){
     }
   }
   prevAlarmTriggered = true;
+  */
 }
 
 void Session::deactivateAlarm(){
