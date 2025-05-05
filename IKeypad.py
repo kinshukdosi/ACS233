@@ -121,9 +121,6 @@ class keypad(tk.Frame):
     def update_output_window(self):
         temp_text_output = self.text_output
 
-        if(self.alarm_state == 'F'):
-            self.sector_triggered = "No sensor triggered"
-
 
         if(not(self.selector_mode)):
             if(self.access_level == 0):

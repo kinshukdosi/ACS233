@@ -14,7 +14,7 @@ import serial
 
 def keypad_selection(text):
     print(text)
-    if(keypad.access_level == 0 and text != 'Face' and text != 'Del' and text != '^' and text != 'Ent' and text != 'v' and text != 'Logout'):
+    if(keypad.access_level == 0 and text != 'Face' and text != 'Del' and text != '^' and text != 'Ent' and text != 'v' and text != 'Logout' and text[0] != '*'):
         serial_write(arduino, 'p' + text)
     else:
         if(keypad.access_level == 1 and text == 'Face'):
@@ -58,8 +58,11 @@ def keypad_selection(text):
         elif text.strip()[0] == '6':
             logTable.export_to_csv()
         else:
-            serial_write(arduino, get_selection_message(text))
-            print("Unknown selection" + text)
+            message = get_selection_message(text)
+            if(message != None):
+                serial_write(arduino, message)
+            else:
+                print("Unknown selection" + text)
 
 
 def get_selection_message(selection):
@@ -132,6 +135,10 @@ def serial_check_resp(arduino):
                         logTable.add_record(
                             [datetime.now().strftime("%d/%m/%y"), datetime.now().strftime("%H:%M:%S"), 'Deactivated Alarm',
                             '-'])
+                        
+                        keypad.sector_triggered = "No sensor triggered"
+                        print("Reset alarm trigger")
+                        
                     keypad.alarm_state = response[1]
 
                 # Sensor triggered

@@ -104,14 +104,13 @@ Session::Session(char systemMode){
 }
 
 boolean Session::checkPin(char correctPIN[], char enteredPIN[]){
-  boolean comparePINs = true;
   for (int i=0; i<4; i++){
-      if (correctPIN[i] != enteredPIN[i+1]){
-        boolean comparePINs = false;
+      if (correctPIN[i] != enteredPIN[i]){
+        return false;
       }
   }
 
-  return comparePINs;
+  return true;
 }
 
 void Session::run(){
@@ -209,7 +208,12 @@ void Session::run(){
     else if (receivedMessage[0] == 'p')
     {
         // Checks if the entered PIN matches
-        bool PINsMatch = checkPin(correctPIN, receivedMessage);
+        char enteredPIN[4];
+        for (int i=0; i<4; i++){
+          enteredPIN[i] = receivedMessage[i+1];
+        }
+
+        bool PINsMatch = checkPin(correctPIN, enteredPIN);
         //SerialWrite(receivedMessage[i+1], correctPIN);
 
         // If PIN is correct, log in and reset alarm
