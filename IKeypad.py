@@ -34,6 +34,7 @@ class keypad(tk.Frame):
         self.create_keypad()
         self.update_output_window()
 
+        # starts time since last interaction
         self.interaction_time = time.time()
 
     #method creates keypad
@@ -60,15 +61,17 @@ class keypad(tk.Frame):
                 col=10
                 row+=1
     
-    #method called when a button is pressed
+    #method called when a button is pressed, most text inputs are passed on to interface
     def key_pressed(self, text):
         self.interaction_time = time.time()
         #exits application
         if text == 'Exit':
             self.destroy()
             sys.exit()
+        # handles empty button presses
         elif text == ' ':
             pass
+        # handles logout button
         elif text == 'Logout':
             self.selector_mode = False
             self.key_callback(text)
@@ -84,25 +87,26 @@ class keypad(tk.Frame):
         elif text == 'Del':
             if self.entered_pin:
                 self.entered_pin.pop()
-        #
         elif text == 'Face':
             self.key_callback(text)
+        #handles enter button
         elif text == 'Ent':
-            if(self.enterring_name):
+            if(self.enterring_name): # if user was entering a name for adding it sends it with a prefix to interface and resets variable
                 self.key_callback('N' + ''.join(self.entered_name))
                 self.entered_name = []
             else:
-                if(self.access_level == 0 and not(self.selector_mode)):
+                if(self.access_level == 0 and not(self.selector_mode)): # identifies pin entry then passes to interface and clears variable
                     self.key_callback(''.join(self.entered_pin))
                     self.entered_pin = []
-                if(self.selector_mode):
+                if(self.selector_mode): # identifies selecting an option for deleting then passes what the cursor was on to interface with a prefix
                     self.key_callback("D" + str(self.text_output[int(self.cursor)-1]))
                 else:
-                    try:
+                    try: # attempts to pass what the cursor was on to interface
                         self.key_callback(str(self.text_output[int(self.cursor)-1]))
                     except IndexError:
                         print("Nothing selected")
         else:
+            # both are for the number keys and adds them to the correct variable
             if(self.enterring_name):
                 self.entered_name.append(text)
             else:
@@ -119,43 +123,46 @@ class keypad(tk.Frame):
     #updates output window by clearing window then reprinting the text_output variable
     #also adds cursor when in menu
     def update_output_window(self):
-        temp_text_output = self.text_output
+        temp_text_output = self.text_output # stores text so it can be checked if it has changed later
 
-
-        if(not(self.selector_mode)):
-            if(self.access_level == 0):
+        if(not(self.selector_mode)): # checks system is not selecting a name for deleting
+            if(self.access_level == 0): # identifies pin entry mode
                 self.text_output = ["Enter pin:", ]
                 for i in self.entered_pin:
-                    self.text_output.append('*')
+                    self.text_output.append('*') # shows user star instead of pin numbers
+            # shows user options for access level 2, options vary based on system state
             elif(self.access_level == 1):
                 if(self.system_mode == 'D'):
                     self.text_output = ['Level 1 accessed\n', '1.Switch to night mode\n']
                 else:
                     self.text_output = ['Level 1 accessed\n', '1.Switch to day mode\n']
+            # identifies access level 2
             elif(self.access_level == 2):
-                if(self.enterring_name):
+                if(self.enterring_name): # checks if user is enterring a name for adding a face
                     self.text_output = ["Enter user ID: ", self.entered_name]
-
+                # shows options for level 2 access
                 else:
                     if(self.system_mode == 'D'):
                         self.text_output =['Level 2 accessed\n', '1.Switch to night mode\n', '2.Add face\n', '3.Delete face\n', '4.Deactivate system\n', '5.change pin\n', '6.Export log to csv']
                     else:
                         self.text_output =['Level 2 accessed\n', '1.Switch to day mode\n', '2.Add face\n', '3.Delete face\n', '4.Deactivate system\n', '5.change pin\n', '6.Export log to csv']
 
+        # if text has been changed resets cursor to initial position
         if(temp_text_output != self.text_output):
             self.cursor = 2.0
 
 
-        current_time = datetime.now().time()
-        self.output_window.delete('1.0', tk.END)
+        current_time = datetime.now().time() # resets time of last interaction
+        self.output_window.delete('1.0', tk.END) # deletes text in output window
         i = 0
+        # adds currently correct text back in
         for line in self.text_output:
             if i == 0:
                 self.output_window.insert(tk.END, current_time.strftime('%H:%M') + ' ' + line)
                 i = 1
             else: 
                 self.output_window.insert(tk.END, line)
-
+        # adds cursor whilst checking it is not outside bounds of selectable text
         if int(self.cursor) < (len(self.text_output) + 1):
             self.output_window.tag_add('highlightline', f"{int(self.cursor)}.0", f"{int(self.cursor+1.0)}.0")
         self.output_window.tag_config('highlightline', background = "white", foreground = 'black')
@@ -164,7 +171,7 @@ class keypad(tk.Frame):
         self.sensor_triggered_window.insert(tk.END, self.decode_sensor(self.sector_triggered))
         self.after(10, self.update_output_window)
 
-
+    # function decodes the identification code that the arduino passes over when the alarm is triggered for displaying to user
     def decode_sensor(self, code):
         if(code != "No sensor triggered"):
             output = ""
