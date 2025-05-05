@@ -19,12 +19,18 @@ def keypad_selection(text):
     else:
         if(keypad.access_level == 1 and text == 'Face'):
             valid_face_id, face_id_num = facialRecognition.start(0)
-            face_id_name = deleteFace.get_face_name(face_id_num[0])[0]
-            if valid_face_id:
-                serial_write(arduino, 'f')
+            if face_id_num != []:
+                if face_id_num[0] != 'Unknown':
+                    face_id_name = deleteFace.get_face_name(face_id_num[0])[0]
+                    if valid_face_id:
+                        serial_write(arduino, 'f')
+                        logTable.add_record(
+                            [datetime.now().strftime("%d/%m/%y"), datetime.now().strftime("%H:%M:%S"), 'Access Level 2 granted',
+                            face_id_name])
+            else:
                 logTable.add_record(
-                    [datetime.now().strftime("%d/%m/%y"), datetime.now().strftime("%H:%M:%S"), 'Access Level 2 granted',
-                    face_id_name])
+                        [datetime.now().strftime("%d/%m/%y"), datetime.now().strftime("%H:%M:%S"), 'Access Level 2 failed',
+                        '-'])
                  
         elif(text == 'Logout'):
             logTable.add_record(
