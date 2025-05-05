@@ -1,4 +1,5 @@
 import cv2, face_recognition, pickle, os
+import time
 import sqlite3
 
 def startVideo(cameraID):
@@ -73,6 +74,7 @@ def start(cameraID):
 
     recognised = False
     video = startVideo(cameraID)
+    start_time = time.time()
     while True:
         analysis = analyseFrame(video, data, faceCascade)
         
@@ -87,6 +89,9 @@ def start(cameraID):
             break
 
         if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+
+        if time.time() - start_time > 5:
             break
     
     video.release()

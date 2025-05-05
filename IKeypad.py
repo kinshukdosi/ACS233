@@ -25,6 +25,7 @@ class keypad(tk.Frame):
         self.access_level = 0
         self.system_mode = 'I'
         self.alarm_state = 'F'
+        self.sector_triggered = ''
 
         #calling methods to create window
         self.create_output_window()
@@ -88,7 +89,10 @@ class keypad(tk.Frame):
             if(self.selector_mode):
                 self.key_callback("D" + str(self.text_output[int(self.cursor)-1]))
             else:
-                self.key_callback(str(self.text_output[int(self.cursor)-1]))
+                try:
+                    self.key_callback(str(self.text_output[int(self.cursor)-1]))
+                except IndexError:
+                    print("Nothing selected")
         else:
             self.entered_pin.append(text)
 
@@ -135,4 +139,5 @@ class keypad(tk.Frame):
             self.output_window.tag_add('highlightline', f"{int(self.cursor)}.0", f"{int(self.cursor+1.0)}.0")
         self.output_window.tag_config('highlightline', background = "white", foreground = 'black')
 
-        self.after(50, self.update_output_window)
+
+        self.after(10, self.update_output_window)

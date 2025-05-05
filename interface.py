@@ -16,7 +16,7 @@ import serial
 
 def keypad_selection(text):
     print(text)
-    if(keypad.access_level == 0):
+    if(keypad.access_level == 0 and text != 'Face' and text != 'Del' and text != '^' and text != 'Ent' and text != 'v' and text != 'Logout'):
         serial_write(arduino, 'p' + text)
     else:
         if(keypad.access_level == 1 and text == 'Face'):
@@ -53,6 +53,7 @@ def keypad_selection(text):
             
         else:
             serial_write(arduino, get_selection_message(text))
+            print("Unknown selection" + text)
 
 
 def get_selection_message(selection):
@@ -66,7 +67,7 @@ def get_selection_message(selection):
     elif selection.strip()[0] == '5':
         return "changePin"
     else:
-        return selection
+        return None
 
 def get_face_del():
     try:
@@ -103,6 +104,7 @@ def serial_check_resp(arduino):
                 # Current Mode
                 elif response[0] == 'm':
                     if keypad.system_mode != response[1]:
+                        keypad_selection('Logout')
                         match response[1]:
                             case 'I':
                                 log_str = 'Changed to Idle'
@@ -151,7 +153,7 @@ def serial_check_resp(arduino):
     
 
     
-    root.after(50, lambda: serial_check_resp(arduino))
+    root.after(10, lambda: serial_check_resp(arduino))
 
 def connect_arduino():
     print("Connecting to arduino")
