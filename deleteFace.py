@@ -20,3 +20,11 @@ def deleteFace(ID):
     print(f"Faces with ID {ID} removed from system")
 
 
+def get_face_name(ID):
+    conn = sqlite3.connect('people.db')
+    cursor = conn.cursor()
+    cursor.execute('SELECT name FROM people WHERE ID = ?', (ID,))
+    name = cursor.fetchone()
+    conn.close()
+    return name
+

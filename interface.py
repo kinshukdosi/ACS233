@@ -34,10 +34,16 @@ def keypad_selection(text):
         elif text.strip()[0] == 'D':
             id = text.strip()[1:]
             deleteFace.deleteFace(id)
+            name = deleteFace.get_face_name(id)
+            logTable.add_record(
+                [datetime.now().strftime("%d/%m/%y"), datetime.now().strftime("%H:%M:%S"), 'Face Deleted', name])
             keypad.selector_mode = False
             
         elif text.strip()[0] == '2':
-            addFace.startAddFace(0, 'Placeholder')
+            name = 'Placeholder'
+            addFace.startAddFace(0, name)
+            logTable.add_record(
+                [datetime.now().strftime("%d/%m/%y"), datetime.now().strftime("%H:%M:%S"), 'Face Added', name])
             
         elif text.strip()[0] == '3':
             get_face_del()
